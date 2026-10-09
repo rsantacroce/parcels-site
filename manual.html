@@ -16,6 +16,7 @@
       <a class="brand" href="./"><span class="tiles"><i></i><i></i><i></i><i></i></span>PARCELS</a>
       <nav>
         <a href="manual.html" aria-current="page">Manual</a>
+        <a href="pedia.html">Parcelspedia</a>
         <a href="assets.html">Assets</a>
         <a href="https://github.com/rsantacroce/parcels">GitHub</a>
       </nav>
@@ -41,6 +42,8 @@
     </nav>
 
     <article>
+      <div class="note" style="margin-top:0">Looking for exact numbers (revenue per zone and level, every building's stats, the land value and demand formulas)? See the <a href="pedia.html">Parcelspedia</a>.</div>
+
       <h2 id="start">Getting started</h2>
       <p>Download the build for your system from the <a href="./#download">download section</a>, unpack it, and run <code>parcels</code> from inside the unpacked folder (it reads <code>config/balance.ron</code> from there and writes saves to <code>saves/</code>). On macOS, clear the download quarantine once with <code>xattr -dr com.apple.quarantine parcels-*</code>.</p>
       <p>The title screen shows an AI city growing in the background and offers:</p>
@@ -162,7 +165,7 @@
       </table></div>
 
       <h2 id="economy">Money</h2>
-      <p>Each month you collect taxes from the buildings on your parcel, pay upkeep for everything you built, and settle power and water trades with your neighbours. The side panel shows all three.</p>
+      <p>The exact formulas and a revenue calculator are in the <a href="pedia.html#taxes">Parcelspedia</a>. Each month you collect taxes from the buildings on your parcel, pay upkeep for everything you built, and settle power and water trades with your neighbours. The side panel shows all three.</p>
       <ul>
         <li><strong>Tax rate</strong> (0–20%, default 7%). Above 7% demand for your parcel falls, below it demand rises. Demand is shared across the map, so a lower tax pulls newcomers away from your neighbours.</li>
         <li><strong>Debt.</strong> Building needs cash in hand. Upkeep can push your treasury below zero, but never below −$5,000.</li>
@@ -209,7 +212,7 @@ parcels-server --slots 4 --wait 2 --map 192x144</code></pre>
   <footer>
     <div class="wrap">
       <span>Parcels manual · v0.2</span>
-      <span><a href="./">Home</a> · <a href="assets.html">Assets</a> · <a href="https://github.com/rsantacroce/parcels/issues">Report a problem</a></span>
+      <span><a href="./">Home</a> · <a href="pedia.html">Parcelspedia</a> · <a href="assets.html">Assets</a> · <a href="https://github.com/rsantacroce/parcels/issues">Report a problem</a></span>
     </div>
   </footer>
 </body>

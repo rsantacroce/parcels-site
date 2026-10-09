@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Parcelspedia</title>
+  <meta name="description" content="Every item in Parcels with its full stats, and exactly how taxes, upkeep, trade, demand, growth and land value are calculated.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Crect width=%229%22 height=%229%22 rx=%222%22 fill=%22%234f9e49%22/%3E%3Crect x=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%233f78c9%22/%3E%3Crect y=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%23c99a1f%22/%3E%3Crect x=%2211%22 y=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%238a63c4%22/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .formula { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; margin: 12px 0; font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .88rem; overflow-x: auto; }
+    .entry { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 20px; margin: 14px 0; scroll-margin-top: 140px; }
+    .pedia-sec { scroll-margin-top: 130px; }
+    .entry td:first-child { white-space: nowrap; }
+    .entry h3 { margin: 0 0 4px; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .entry h3 small { font-weight: 500; color: var(--muted); font-size: .85rem; }
+    .entry > p { margin: 4px 0 10px; color: var(--muted); }
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin: 10px 0; }
+    .stat { background: var(--surface-2); border-radius: 8px; padding: 8px 10px; }
+    .stat b { display: block; font-size: 1.02rem; font-variant-numeric: tabular-nums; }
+    .stat span { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+    .derived { font-size: .92rem; margin: 8px 0 0; padding-left: 18px; }
+    .derived li { margin: 2px 0; }
+    .calc { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; align-items: end; }
+    .calc label { display: flex; flex-direction: column; gap: 4px; font-size: .85rem; color: var(--muted); }
+    .calc select, .calc input { font: inherit; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface); color: var(--text); }
+    .calc output { font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .search-wrap { position: sticky; top: 58px; z-index: 5; background: var(--bg); padding: 10px 0; }
+    .search-wrap input { width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; }
+    .hidden { display: none !important; }
+    .toc h4 { margin: 14px 0 4px; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+    .toc .sub { padding-left: 10px; font-size: .88rem; }
+    @media (min-width: 761px) { .toc { max-height: calc(100vh - 96px); overflow-y: auto; } }
+    .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--surface-2); color: var(--muted); font-size: .78rem; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <a class="brand" href="./"><span class="tiles"><i></i><i></i><i></i><i></i></span>PARCELS</a>
+      <nav>
+        <a href="manual.html">Manual</a>
+        <a href="pedia.html" aria-current="page">Parcelspedia</a>
+        <a href="assets.html">Assets</a>
+        <a href="https://github.com/rsantacroce/parcels">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wrap docs">
+    <nav class="toc" id="toc" aria-label="Contents">
+      <h4>How it works</h4>
+      <a href="#tick">A game tick</a>
+      <a href="#taxes">Taxes</a>
+      <a href="#calculator">Revenue calculator</a>
+      <a href="#upkeep">Upkeep</a>
+      <a href="#trade">Power and water trade</a>
+      <a href="#score">Score and winning</a>
+      <a href="#demand">Demand</a>
+      <a href="#growth">Growth</a>
+      <a href="#landvalue">Land value</a>
+      <a href="#effects">Pollution, traffic, crime, fire</a>
+      <h4>Items</h4>
+      <a href="#zones">Zones</a>
+      <div class="sub" id="toc-zones"></div>
+      <a href="#networks">Roads and networks</a>
+      <div id="toc-buildings"></div>
+      <h4>Reference</h4>
+      <a href="#constants">All balance constants</a>
+    </nav>
+
+    <article>
+      <h1 style="margin:0 0 6px">Parcelspedia</h1>
+      <p style="color:var(--muted);margin:0 0 6px">Every item in the game and how the money actually moves. All numbers come from the game's <code>config/balance.ron</code> (version <span data-k="version">…</span>), exported by <code>cargo run -p parcels_sim --example pedia</code>, so they match what you play.</p>
+      <p style="color:var(--muted);margin:0">Money is shown in dollars. The sim counts in cents per tick; a month is <b data-k="ticks_per_month">30</b> ticks.</p>
+
+      <div class="search-wrap"><input type="search" id="q" placeholder="Search items (e.g. hospital, pollution, avenue)" aria-label="Search the Parcelspedia"></div>
+
+      <section class="pedia-sec" id="tick" style="padding:0">
+        <h2>A game tick</h2>
+        <p>Every tick runs six stages in order, identically on every machine:</p>
+        <ol>
+          <li><b>Commands</b>: everything players and the AI asked for is applied, sorted by author and sequence.</li>
+          <li><b>Utilities</b>: power and water networks are flood-filled across parcel borders. Each owner uses their own supply first, then buys from the cheapest neighbour selling. Power is settled before water, because pumps need power.</li>
+          <li><b>Demand</b>: map-wide residential, commercial, industrial and office demand, shifted per player by their tax rate.</li>
+          <li><b>Growth</b>: every eligible zone tile on the map competes for one shared pool of newcomers.</li>
+          <li><b>Land value</b>: service coverage, traffic, pollution and crime are recomputed and land value moves toward its target.</li>
+          <li><b>Economy</b>: taxes in, upkeep out, trades paid, treasury clamped at the debt floor, scores updated.</li>
+        </ol>
+        <p>The game lasts <b data-k="game_years">10</b> years (<span data-k="game_length_ticks">3600</span> ticks) by default.</p>
+      </section>
+
+      <section class="pedia-sec" id="taxes" style="padding:0">
+        <h2>Taxes</h2>
+        <p>Every powered, occupied zone tile you own pays tax every tick:</p>
+        <div class="formula">tax per tick (¢) = occupants × land value × tax rate % ÷ <span data-k="tax_divisor">1500</span><br>tax per month = tax per tick × <span data-k="ticks_per_month">30</span></div>
+        <ul>
+          <li><b>Occupants</b> = level × people (or jobs) per level of that zone. See <a href="#zones">Zones</a>.</li>
+          <li><b>Industry is taxed at base land value</b> (<span data-k="land_value_base">200</span>) wherever it stands: factories don't care about the view. Every other zone pays on its tile's actual land value.</li>
+          <li>Unpowered tiles pay nothing.</li>
+          <li>Tax rate runs from 0 to <span data-k="max_tax_rate">20</span>%, default <span data-k="default_tax_rate">7</span>%. Each point above <span data-k="neutral_tax_rate">7</span>% cuts your demand (see <a href="#demand">Demand</a>), each point below raises it.</li>
+        </ul>
+        <p>A useful rule of thumb at <span data-k="default_tax_rate">7</span>%: <b>each occupant pays <span id="per-occ"></span> a month per 100 points of land value.</b></p>
+      </section>
+
+      <section class="pedia-sec" id="calculator" style="padding:0">
+        <h2>Revenue calculator</h2>
+        <div class="entry">
+          <div class="calc">
+            <label>Zone <select id="c-zone"></select></label>
+            <label>Level <select id="c-level"></select></label>
+            <label>Land value (0–1000) <input id="c-lv" type="number" min="0" max="1000" step="10" value="500"></label>
+            <label>Tax rate % <input id="c-tax" type="number" min="0" max="20" step="1" value="7"></label>
+            <label>Tiles <input id="c-tiles" type="number" min="1" step="1" value="1"></label>
+            <div><div style="font-size:.85rem;color:var(--muted)">Tax per month</div><output id="c-out">—</output></div>
+          </div>
+          <p id="c-note" style="margin:10px 0 0;color:var(--muted);font-size:.9rem"></p>
+        </div>
+      </section>
+
+      <section class="pedia-sec" id="upkeep" style="padding:0">
+        <h2>Upkeep</h2>
+        <p>Paid every tick for everything you have built on your parcel. Zones themselves cost nothing to keep.</p>
+        <div class="table-scroll"><table id="upkeep-table"><tr><th>Item</th><th class="num">Per tick</th><th class="num">Per month</th></tr></table></div>
+        <p>Bridges (roads on water) cost <b>double</b> upkeep. Each placed building's upkeep is listed on its entry below.</p>
+      </section>
+
+      <section class="pedia-sec" id="trade" style="padding:0">
+        <h2>Power and water trade</h2>
+        <p>Networks ignore parcel borders. Within one connected network, every owner first covers their own demand from their own plants, pumps and towers. Owners who are still short buy from neighbours who have ticked <b>Sell surplus</b>, cheapest price first. The buyer pays the seller every tick:</p>
+        <div class="formula">trade per tick (¢) = units bought × seller's price (¢ per unit per tick)</div>
+        <ul>
+          <li>The AI offers at <span data-k="default_utility_price">4</span>¢ per unit per tick. At that price, one unit sold all month earns <span id="unit-month"></span>.</li>
+          <li><b>Power use</b>: a zone tile needs 1 + its level; a building needs its listed power draw.</li>
+          <li><b>Water use</b>: a zone tile needs its level (empty lots need none). Levels above <span data-k="water_free_levels">1</span> won't grow without water.</li>
+          <li>Water producers make nothing without power. Pumps and treatment plants that touch the river get their river bonus.</li>
+        </ul>
+      </section>
+
+      <section class="pedia-sec" id="score" style="padding:0">
+        <h2>Score and winning</h2>
+        <div class="formula">score = treasury + (sum of land value of every tile on your parcel) × <span data-k="score_land_value_factor">20</span>¢</div>
+        <p>So each point of land value anywhere on your parcel is worth <b><span id="lv-point"></span></b> of score, as much as cash. A 32×24 parcel at an average land value of 400 is worth <b><span id="lv-example"></span></b>. The highest score when time runs out wins.</p>
+        <p>Your treasury starts at <b><span data-money="starting_treasury"></span></b>. Spending needs cash in hand. Upkeep can push you below zero, but never below <b><span data-money="debt_floor"></span></b>.</p>
+      </section>
+
+      <section class="pedia-sec" id="demand" style="padding:0">
+        <h2>Demand</h2>
+        <p>Workers, jobs and shoppers move freely across the map, so raw demand is computed for the whole map and then normalised to −1000…1000:</p>
+        <div class="formula">
+          region = 100% + <span data-k="region_growth_percent_per_year">30</span>% per game year<br>
+          R = <span data-k="base_residential_demand">80</span>×region + bonuses + (all jobs incl. public) × <span data-k="workers_per_100_jobs">130</span>/100 − residents<br>
+          C = <span data-k="base_commercial_demand">20</span>×region + bonuses + residents × 100/<span data-k="residents_per_100_commercial_jobs">300</span> − commercial jobs<br>
+          I = <span data-k="base_industrial_demand">80</span>×region + bonuses + residents × 100/<span data-k="residents_per_100_industrial_jobs">220</span> − industrial jobs<br>
+          O = <span data-k="base_office_demand">10</span>×region + bonuses + residents × 100/<span data-k="residents_per_100_office_jobs">450</span> − office jobs<br>
+          bar = raw × 1000 ÷ (current size + 100 for R, + 50 for C/I/O)
+        </div>
+        <p>Your own bars are the map-wide bars minus <b>(your tax − <span data-k="neutral_tax_rate">7</span>) × <span data-k="tax_demand_penalty">4</span> × 10</b>. At 10% tax you lose 120 points on every bar; at 4% you gain 120. Bonuses come from powered landmarks (stadium, town hall, airport); see their entries.</p>
+        <p>If your demand for a zone falls below −500, occupied tiles of that zone start leaving even when they are well served.</p>
+      </section>
+
+      <section class="pedia-sec" id="growth" style="padding:0">
+        <h2>Growth</h2>
+        <p>Each tick, up to <span data-k="max_growth_per_tick">4</span> tiles per zone type, across the whole map, move up or down a level. Which ones is decided by competition:</p>
+        <div class="formula">growth score = land value + your demand ÷ 4 + random 0…<span data-k="growth_jitter">60</span></div>
+        <ul>
+          <li>Only tiles that are <b>sustained</b> (powered, a road within <span data-k="road_access_radius">2</span> tiles, and watered if above level <span data-k="water_free_levels">1</span>) and whose owner has positive demand can grow. The highest scores win, so cheap land loses newcomers to valuable land, including your neighbour's.</li>
+          <li>When map demand is negative, the lowest-scoring occupied tiles shrink first.</li>
+          <li>A tile that isn't sustained loses a level with a <span data-k="decay_pct">4</span>% chance each tick.</li>
+        </ul>
+        <h3>What each level needs</h3>
+        <div class="table-scroll"><table id="req-table"></table></div>
+      </section>
+
+      <section class="pedia-sec" id="landvalue" style="padding:0">
+        <h2>Land value</h2>
+        <p>Every tile has a land value from 0 to <span data-k="land_value_max">1000</span>. Each tick it moves 1/<span data-k="land_value_smoothing">6</span> of the way toward a target:</p>
+        <div class="table-scroll"><table id="lv-table"><tr><th>Effect</th><th class="num">Points</th><th>Notes</th></tr></table></div>
+        <p>Amenities, nature and shops spread by distance: full strength on the source tile, fading linearly to zero just past the radius. Effects ignore parcel borders, so a neighbour's park helps you and their factory hurts you.</p>
+      </section>
+
+      <section class="pedia-sec" id="effects" style="padding:0">
+        <h2>Pollution, traffic, crime and fire</h2>
+        <div class="table-scroll"><table id="fx-table"><tr><th>Effect</th><th>How it's made</th><th>Spread</th><th>Cap</th></tr></table></div>
+      </section>
+
+      <section class="pedia-sec" id="zones" style="padding:0">
+        <h2>Zones</h2>
+        <p>Zoning costs <b><span data-money="zone_cost"></span></b> per tile (low density) or <b><span data-money="dense_zone_cost"></span></b> (dense). Low density grows to level <span data-k="low_density_max_level">3</span>, dense to <span data-k="high_density_max_level">6</span>. Building on woodland costs an extra <b><span data-money="clear_forest_cost"></span></b> per tile.</p>
+        <div id="zone-entries"></div>
+      </section>
+
+      <section class="pedia-sec" id="networks" style="padding:0">
+        <h2>Roads and networks</h2>
+        <div id="network-entries"></div>
+      </section>
+
+      <div id="building-sections"></div>
+
+      <section class="pedia-sec" id="constants" style="padding:0">
+        <h2>All balance constants</h2>
+        <p>The raw values from <code>config/balance.ron</code>. Money is in cents, rates per tick. Every save keeps the values it was started with.</p>
+        <div class="table-scroll"><table id="const-table"><tr><th>Name</th><th class="num">Value</th></tr></table></div>
+      </section>
+    </article>
+  </div>
+
+  <footer>
+    <div class="wrap">
+      <span>Parcelspedia · generated from the game's balance file</span>
+      <span><a href="./">Home</a> · <a href="manual.html">Manual</a> · <a href="assets.html">Assets</a></span>
+    </div>
+  </footer>
+
+  <script>
+  (async function () {
+    const data = await fetch("pedia.json").then(r => r.json());
+    const c = data.config;
+    const TPM = c.ticks_per_month;
+    const $ = id => document.getElementById(id);
+    const el = (tag, { dataset, ...props } = {}, ...kids) => {
+      const e = Object.assign(document.createElement(tag), props);
+      if (dataset) Object.assign(e.dataset, dataset);
+      e.append(...kids);
+      return e;
+    };
+    const money = cents => {
+      const neg = cents < 0, v = Math.abs(cents) / 100;
+      const s = v >= 100 ? v.toLocaleString("en-US", { maximumFractionDigits: 0 }) : v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return (neg ? "−$" : "$") + s;
+    };
+    const perMonth = perTick => money(perTick * TPM);
+    const num = n => n.toLocaleString("en-US");
+    const row = (...cells) => el("tr", {}, ...cells.map((x, i) => el("td", { className: typeof x === "number" || /^[−$\d]/.test(String(x)) && i > 0 ? "num" : "" }, String(x))));
+
+    // Inline values.
+    const derived = {
+      version: data.game_version,
+      game_years: c.game_length_ticks / (TPM * 12),
+      decay_pct: c.decay_chance_per_mille / 10,
+    };
+    document.querySelectorAll("[data-k]").forEach(e => {
+      const k = e.dataset.k;
+      if (k in derived) e.textContent = derived[k]; else if (k in c) e.textContent = num(c[k]);
+    });
+    document.querySelectorAll("[data-money]").forEach(e => e.textContent = money(c[e.dataset.money]));
+    $("per-occ").textContent = money(100 * c.default_tax_rate / c.tax_divisor * TPM);
+    $("unit-month").textContent = perMonth(c.default_utility_price);
+    $("lv-point").textContent = money(c.score_land_value_factor);
+    $("lv-example").textContent = money(32 * 24 * 400 * c.score_land_value_factor);
+
+    // Zones.
+    const zones = data.zones;
+    const maxLv = d => d === "Low" ? c.low_density_max_level : c.high_density_max_level;
+    function needs(zone, dense, lv) {
+      const n = ["road ≤" + c.road_access_radius, "power"];
+      if (lv > c.water_free_levels) n.push("water");
+      if (dense && lv > c.low_density_max_level) n.push("land value ≥ " + c.dense_min_land_value);
+      if ((zone === "Residential" && lv > c.education_free_levels) || (zone === "Office" && lv > 1)) n.push("school/university");
+      if (lv > c.health_free_levels) n.push("clinic/hospital");
+      return n.join(", ");
+    }
+    const tax = (zone, occ, lv, rate) => occ * (zone === "Industrial" ? c.land_value_base : lv) * rate / c.tax_divisor;
+
+    // Requirements table.
+    const rt = $("req-table");
+    rt.append(el("tr", {}, ...["Level", ...zones.map(z => z.name)].map(h => el("th", {}, h))));
+    for (let lv = 1; lv <= c.high_density_max_level; lv++) {
+      rt.append(el("tr", {}, el("td", {}, (lv > c.low_density_max_level ? "Dense " : "") + lv),
+        ...zones.map(z => el("td", {}, needs(z.id, lv > c.low_density_max_level, lv)))));
+    }
+
+    const zoneDesc = {
+      Residential: "Homes. Residents are the workforce and the shoppers: they drive demand for every other zone, and they pay the most tax on valuable land.",
+      Commercial: "Shops. Need residents nearby and lift the land value around them by up to " + c.commercial_bonus * 3 + " points.",
+      Industrial: "Factories and workshops. Taxed at base land value, so a cheap, polluted corner is fine. They pollute: " + c.industrial_pollution_per_level + " per level (×1.5 dense) within " + c.pollution_radius + " tiles, and their own tiles lose 100 land value.",
+      Office: "Offices. Clean jobs that need education from level 2. The highest-paying zone once land is valuable.",
+    };
+    const zc = $("zone-entries"), tz = $("toc-zones");
+    for (const z of zones) {
+      const id = "zone-" + z.id.toLowerCase();
+      tz.append(el("a", { href: "#" + id, textContent: z.name }));
+      const t = el("table", {});
+      const lvs = z.id === "Industrial" ? [c.land_value_base] : [300, 500, 800];
+      t.append(el("tr", {}, ...["Level", z.id === "Residential" ? "Residents" : "Jobs", "Power", "Water", ...lvs.map(v => z.id === "Industrial" ? "Tax/mo (any LV)" : "Tax/mo @ LV " + v), "Pollution"].map((h, i) => el("th", { className: i ? "num" : "" }, h))));
+      for (let lv = 1; lv <= c.high_density_max_level; lv++) {
+        const occ = lv * z.per_level;
+        const poll = z.id === "Industrial" ? (lv > c.low_density_max_level ? `${c.industrial_pollution_per_level * lv * 1.5}` : `${c.industrial_pollution_per_level * lv} (${c.industrial_pollution_per_level * lv * 1.5} dense)`) : "0";
+        t.append(row((lv > c.low_density_max_level ? "Dense " : "") + lv, occ, 1 + lv, lv,
+          ...lvs.map(v => perMonth(tax(z.id, occ, v, c.default_tax_rate))), poll));
+      }
+      zc.append(el("div", { className: "entry", id, dataset: { search: `${z.name} zone ${z.letter}` } },
+        el("h3", {}, z.name, el("small", {}, `zone · ${money(c.zone_cost)} / ${money(c.dense_zone_cost)} dense per tile`)),
+        el("p", { textContent: zoneDesc[z.id] }),
+        el("div", { className: "stats" },
+          stat(`${z.per_level}`, z.id === "Residential" ? "residents / level" : "jobs / level"),
+          stat(`${c.low_density_max_level} / ${c.high_density_max_level}`, "max level low / dense"),
+          stat(money(c.zone_cost), "cost / tile"),
+          stat(money(c.dense_zone_cost), "dense cost / tile")),
+        el("div", { className: "table-scroll" }, t),
+        el("p", { className: "derived", style: "padding:0;color:var(--muted)", textContent: `Tax at the default ${c.default_tax_rate}% rate, per tile, per month. An empty zoned lot (level 0) needs ${1} power and pays nothing.` })));
+    }
+    function stat(v, label) { return el("div", { className: "stat" }, el("b", {}, v), el("span", {}, label)); }
+
+    // Calculator.
+    const cz = $("c-zone"), cl = $("c-level");
+    zones.forEach(z => cz.append(el("option", { value: z.id, textContent: z.name })));
+    for (let lv = 1; lv <= c.high_density_max_level; lv++) cl.append(el("option", { value: lv, textContent: lv > c.low_density_max_level ? `${lv} (dense)` : lv }));
+    function calc() {
+      const z = zones.find(z => z.id === cz.value), lv = +cl.value;
+      const landv = Math.max(0, Math.min(1000, +$("c-lv").value || 0)), rate = Math.max(0, Math.min(c.max_tax_rate, +$("c-tax").value || 0));
+      const tiles = Math.max(1, +$("c-tiles").value || 1);
+      const occ = lv * z.per_level;
+      $("c-out").value = perMonth(tax(z.id, occ, landv, rate) * tiles);
+      const shift = (rate - c.neutral_tax_rate) * c.tax_demand_penalty * 10;
+      $("c-note").textContent = `${tiles} × ${occ} ${z.id === "Residential" ? "residents" : "jobs"}` +
+        (z.id === "Industrial" ? `, taxed at base land value ${c.land_value_base}` : ` on land value ${landv}`) +
+        `. Needs ${needs(z.id, lv > c.low_density_max_level, lv)}. ` +
+        (shift ? `Demand ${shift > 0 ? "−" : "+"}${Math.abs(shift)} on every bar at ${rate}%.` : `Neutral tax rate: no demand change.`);
+    }
+    [cz, cl, $("c-lv"), $("c-tax"), $("c-tiles")].forEach(e => e.addEventListener("input", calc));
+    calc();
+
+    // Upkeep table.
+    const ut = $("upkeep-table");
+    for (const [n, k] of [["Street (per tile)", "street_upkeep"], ["Avenue (per tile)", "avenue_upkeep"], ["Power line (per tile)", "power_line_upkeep"], ["Water pipe (per tile)", "water_pipe_upkeep"]])
+      ut.append(row(n, money(c[k]), perMonth(c[k])));
+
+    // Land value table.
+    const lt = $("lv-table");
+    for (const r of [
+      ["Base", "+" + c.land_value_base, "every tile starts here"],
+      ["Parks, services, landmarks", "up to +400", "each building's bonus and radius (only while powered, if it uses power)"],
+      ["River or lake", "up to +" + c.river_bonus, `within ${c.river_radius} tiles`],
+      ["Woodland", "up to +" + c.forest_bonus, `within ${c.forest_radius} tiles; nature is capped at ${Math.max(c.river_bonus, c.forest_bonus)} total`],
+      ["Shops", "up to +" + c.commercial_bonus * 3, `${c.commercial_bonus} per occupied commercial tile within ${c.commercial_radius}`],
+      ["Road on or next to the tile", "+" + c.road_access_bonus, ""],
+      ["Powered", "+" + c.powered_bonus, ""],
+      ["Watered", "+" + c.watered_bonus, ""],
+      ["Health coverage", "+" + c.service_bonus, "clinic or hospital"],
+      ["Education coverage", "+" + c.service_bonus, "school or university"],
+      ["Industrial zone tile", "−100", "on the factory's own tile"],
+      ["Pollution", "−" + c.pollution_weight + " per point", `up to −${c.pollution_cap}`],
+      ["Traffic", "−" + c.traffic_weight + " per point", "the busiest adjacent road"],
+      ["Crime", "−" + c.crime_weight + " per point", `up to −${c.crime_cap}`],
+      ["Water tiles", "0", "always"],
+    ]) lt.append(el("tr", {}, el("td", {}, r[0]), el("td", { className: "num" }, r[1]), el("td", {}, r[2])));
+
+    // Effects.
+    const ft = $("fx-table");
+    for (const r of [
+      ["Pollution", `industrial tiles ${c.industrial_pollution_per_level}/level (×1.5 dense); plants as listed; roads: traffic ÷ ${c.traffic_pollution_divisor}`, `${c.pollution_radius} tiles, fading`, c.pollution_cap],
+      ["Traffic", `on each road tile: occupants within ${c.traffic_radius} tiles ÷ ${c.traffic_divisor}; avenues carry ${c.avenue_traffic_percent}%`, "lowers land value next to the road", "—"],
+      ["Crime", `occupants within ${c.crime_radius} tiles ÷ ${c.crime_divisor}; police coverage removes ${c.police_crime_reduction_percent}%`, `${c.crime_radius} tiles`, c.crime_cap],
+      ["Fire", `each zone tile at level 2+ without fire coverage: ${c.fire_chance_per_million} in a million per tick (about ${(c.fire_chance_per_million * TPM * 12 / 1e4).toFixed(2)}% a year)`, `burns to rubble for ${c.fire_rubble_ticks} ticks, then regrows`, "—"],
+    ]) ft.append(el("tr", {}, ...r.map(x => el("td", {}, String(x)))));
+
+    // Networks.
+    const nets = [
+      ["Street", "street", `Two lanes. ${money(c.street_cost)} per tile, ${perMonth(c.street_upkeep)}/mo upkeep. Bridges over water: ${money(c.street_cost * c.bridge_cost_multiplier)} per tile, double upkeep.`],
+      ["Avenue", "avenue", `Planted median; carries traffic at ${c.avenue_traffic_percent}% of a street's congestion. ${money(c.avenue_cost)} per tile, ${perMonth(c.avenue_upkeep)}/mo upkeep. Bridges: ${money(c.avenue_cost * c.bridge_cost_multiplier)} per tile.`],
+      ["Power line", "power line wire", `${money(c.power_line_cost)} per tile, ${perMonth(c.power_line_upkeep)}/mo. Zones and most buildings also conduct, so you only need lines to bridge gaps. Lines over water become pylons.`],
+      ["Water pipe", "pipe", `${money(c.water_pipe_cost)} per tile, ${perMonth(c.water_pipe_upkeep)}/mo. Underground; shown in the water overlay. Zones and buildings pass water on.`],
+      ["Bulldoze", "demolish", `${money(c.bulldoze_cost)} per tile, plus ${money(c.clear_forest_cost)} to clear woodland.`],
+    ];
+    for (const [n, s, d] of nets) $("network-entries").append(el("div", { className: "entry", id: "net-" + n.toLowerCase().replace(/ /g, "-"), dataset: { search: n + " " + s } }, el("h3", {}, n), el("p", { style: "color:var(--text)", textContent: d })));
+
+    // Buildings by category.
+    const cats = [...new Set(data.buildings.map(b => b.category))];
+    const bs = $("building-sections"), tb = $("toc-buildings");
+    for (const cat of cats) {
+      const sid = "cat-" + cat.toLowerCase();
+      tb.append(el("a", { href: "#" + sid, textContent: cat }));
+      const sec = el("section", { className: "pedia-sec", id: sid, style: "padding:0" }, el("h2", {}, cat));
+      const sub = el("div", { className: "sub" });
+      tb.append(sub);
+      for (const b of data.buildings.filter(b => b.category === cat)) {
+        const s = b.stats, id = "b-" + b.id.toLowerCase();
+        sub.append(el("a", { href: "#" + id, textContent: b.name }));
+        const grid = el("div", { className: "stats" }, stat(money(s.cost), "cost"), stat(perMonth(s.upkeep), "upkeep / month"), stat(`${b.size}×${b.size}`, "footprint"));
+        if (s.power_supply) grid.append(stat(num(s.power_supply), "power supply"));
+        if (s.water_supply) grid.append(stat(num(s.water_supply) + (s.river_bonus ? ` (+${s.river_bonus})` : ""), "water supply (by river)"));
+        if (s.power_draw) grid.append(stat(num(s.power_draw), "power needed"));
+        if (s.service_radius) grid.append(stat(`${b.service} · ${s.service_radius}`, "service · radius"));
+        if (s.land_value_bonus) grid.append(stat(`+${s.land_value_bonus} · ${s.land_value_radius}`, "land value · radius"));
+        if (s.pollution) grid.append(stat(num(s.pollution), "pollution"));
+        if (s.jobs) grid.append(stat(num(s.jobs), "public jobs"));
+        if (s.demand_bonus.some(x => x)) grid.append(stat(["R", "C", "I", "O"].map((l, i) => s.demand_bonus[i] ? `${l}+${s.demand_bonus[i]}` : "").filter(Boolean).join(" "), "demand bonus"));
+        const notes = [];
+        if (s.power_supply) {
+          notes.push(`${money(s.cost / s.power_supply)} to build per unit of power; ${money(s.upkeep * TPM / s.power_supply)} upkeep per unit per month.`);
+          notes.push(`Powers about ${Math.floor(s.power_supply / 3)} level-2 zone tiles (3 power each).`);
+          notes.push(`Sold in full at ${c.default_utility_price}¢: ${perMonth(s.power_supply * c.default_utility_price)}/mo, against ${perMonth(s.upkeep)}/mo upkeep.`);
+        }
+        if (s.water_supply) {
+          const w = s.water_supply + s.river_bonus;
+          notes.push(`Waters about ${Math.floor(s.water_supply / 2)} level-2 tiles (${Math.floor(w / 2)} by the river).`);
+          notes.push(`Sold in full at ${c.default_utility_price}¢: ${perMonth(s.water_supply * c.default_utility_price)}/mo (${perMonth(w * c.default_utility_price)} by the river).`);
+        }
+        if (s.power_draw) notes.push(`Does nothing without ${s.power_draw} power; an unpowered building shows a red beacon.`);
+        if (s.jobs) notes.push(`Its ${s.jobs} public jobs count toward residential demand (+${Math.round(s.jobs * c.workers_per_100_jobs / 100)} raw R) while it runs.`);
+        if (s.land_value_bonus) notes.push(`Adds ${s.land_value_bonus} on its own tiles, fading to 0 just past ${s.land_value_radius} tiles; amenities stack up to +400.`);
+        if (s.pollution) notes.push(`Pollution ${s.pollution} at the centre, fading over ${c.pollution_radius} tiles; costs up to ${s.pollution} land value nearby.`);
+        notes.push(b.conducts ? "Passes power and water to neighbouring tiles." : "Does not pass power or water on.");
+        sec.append(el("div", { className: "entry", id, dataset: { search: `${b.name} ${b.category} ${b.service || ""} ${b.blurb}` } },
+          el("h3", {}, b.name, el("span", { className: "pill", textContent: cat })),
+          el("p", { textContent: b.blurb }),
+          grid,
+          el("ul", { className: "derived" }, ...notes.map(n => el("li", { textContent: n })))));
+      }
+      bs.append(sec);
+    }
+
+    // Constants.
+    const ct = $("const-table");
+    for (const k of Object.keys(c).sort()) ct.append(el("tr", {}, el("td", {}, el("code", {}, k)), el("td", { className: "num" }, num(c[k]))));
+
+    // Search.
+    $("q").addEventListener("input", e => {
+      const q = e.target.value.trim().toLowerCase();
+      document.querySelectorAll(".entry[data-search]").forEach(x => x.classList.toggle("hidden", q && !x.dataset.search.toLowerCase().includes(q)));
+      document.querySelectorAll(".pedia-sec").forEach(sec => {
+        const entries = sec.querySelectorAll(".entry[data-search]");
+        const textHit = !entries.length && sec.textContent.toLowerCase().includes(q);
+        sec.classList.toggle("hidden", q && (entries.length ? ![...entries].some(x => !x.classList.contains("hidden")) : !textHit));
+      });
+    });
+
+    // Entries are built after load, so jump to the requested one now that it exists.
+    if (location.hash) requestAnimationFrame(() => document.getElementById(location.hash.slice(1))?.scrollIntoView());
+  })();
+  </script>
+</body>
+</html>

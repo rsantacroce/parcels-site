@@ -1,0 +1,728 @@
+{
+  "buildings": [
+    {
+      "blurb": "Cheap, plentiful power. Very dirty.",
+      "category": "Power",
+      "conducts": true,
+      "id": "CoalPlant",
+      "name": "Coal plant",
+      "service": null,
+      "size": 2,
+      "stats": {
+        "cost": 300000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 20,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 60,
+        "power_draw": 0,
+        "power_supply": 240,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 100,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Cleaner than coal, pricier to build and run.",
+      "category": "Power",
+      "conducts": true,
+      "id": "GasPlant",
+      "name": "Gas plant",
+      "service": null,
+      "size": 2,
+      "stats": {
+        "cost": 550000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 15,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 25,
+        "power_draw": 0,
+        "power_supply": 220,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 140,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "A little clean power on a single tile.",
+      "category": "Power",
+      "conducts": true,
+      "id": "WindTurbine",
+      "name": "Wind turbine",
+      "service": null,
+      "size": 1,
+      "stats": {
+        "cost": 60000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 0,
+        "power_supply": 18,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 15,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Clean power, modest output.",
+      "category": "Power",
+      "conducts": true,
+      "id": "SolarFarm",
+      "name": "Solar farm",
+      "service": null,
+      "size": 2,
+      "stats": {
+        "cost": 400000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 4,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 0,
+        "power_supply": 90,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 30,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Enormous clean output at an enormous price.",
+      "category": "Power",
+      "conducts": true,
+      "id": "NuclearPlant",
+      "name": "Nuclear plant",
+      "service": null,
+      "size": 3,
+      "stats": {
+        "cost": 2500000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 80,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 10,
+        "power_draw": 0,
+        "power_supply": 1200,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 400,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Pumps water; much more beside the river. Needs power.",
+      "category": "Water",
+      "conducts": true,
+      "id": "WaterPump",
+      "name": "Water pump",
+      "service": null,
+      "size": 1,
+      "stats": {
+        "cost": 150000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 6,
+        "power_supply": 0,
+        "river_bonus": 60,
+        "service_radius": 0,
+        "upkeep": 50,
+        "water_supply": 80
+      }
+    },
+    {
+      "blurb": "Small water supply anywhere. Needs power.",
+      "category": "Water",
+      "conducts": true,
+      "id": "WaterTower",
+      "name": "Water tower",
+      "service": null,
+      "size": 1,
+      "stats": {
+        "cost": 90000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 2,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 25,
+        "water_supply": 40
+      }
+    },
+    {
+      "blurb": "Large water supply. Needs lots of power.",
+      "category": "Water",
+      "conducts": true,
+      "id": "WaterTreatment",
+      "name": "Water treatment",
+      "service": null,
+      "size": 2,
+      "stats": {
+        "cost": 600000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 25,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 20,
+        "power_supply": 0,
+        "river_bonus": 120,
+        "service_radius": 0,
+        "upkeep": 150,
+        "water_supply": 320
+      }
+    },
+    {
+      "blurb": "Cuts crime nearby.",
+      "category": "Services",
+      "conducts": true,
+      "id": "PoliceStation",
+      "name": "Police station",
+      "service": "Police",
+      "size": 1,
+      "stats": {
+        "cost": 250000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 15,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 4,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 10,
+        "upkeep": 80,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Protects nearby buildings from fire.",
+      "category": "Services",
+      "conducts": true,
+      "id": "FireStation",
+      "name": "Fire station",
+      "service": "Fire",
+      "size": 1,
+      "stats": {
+        "cost": 250000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 15,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 4,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 10,
+        "upkeep": 80,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Health coverage for a small area.",
+      "category": "Services",
+      "conducts": true,
+      "id": "Clinic",
+      "name": "Clinic",
+      "service": "Health",
+      "size": 1,
+      "stats": {
+        "cost": 200000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 10,
+        "land_value_bonus": 20,
+        "land_value_radius": 3,
+        "pollution": 0,
+        "power_draw": 4,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 7,
+        "upkeep": 60,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Wide health coverage. Lets towers grow tall.",
+      "category": "Services",
+      "conducts": true,
+      "id": "Hospital",
+      "name": "Hospital",
+      "service": "Health",
+      "size": 2,
+      "stats": {
+        "cost": 800000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 60,
+        "land_value_bonus": 40,
+        "land_value_radius": 5,
+        "pollution": 0,
+        "power_draw": 12,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 16,
+        "upkeep": 200,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Education: lets housing past level 2 and offices grow.",
+      "category": "Services",
+      "conducts": true,
+      "id": "School",
+      "name": "School",
+      "service": "Education",
+      "size": 2,
+      "stats": {
+        "cost": 400000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 30,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 8,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 10,
+        "upkeep": 100,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Wide education coverage and a land value boost.",
+      "category": "Services",
+      "conducts": true,
+      "id": "University",
+      "name": "University",
+      "service": "Education",
+      "size": 3,
+      "stats": {
+        "cost": 1500000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 120,
+        "land_value_bonus": 120,
+        "land_value_radius": 8,
+        "pollution": 0,
+        "power_draw": 20,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 20,
+        "upkeep": 300,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Trees and paths. Lifts land value nearby.",
+      "category": "Parks",
+      "conducts": false,
+      "id": "Park",
+      "name": "Park",
+      "service": null,
+      "size": 1,
+      "stats": {
+        "cost": 5000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 140,
+        "land_value_radius": 4,
+        "pollution": 0,
+        "power_draw": 0,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 2,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Paved square. Lifts land value, good beside shops.",
+      "category": "Parks",
+      "conducts": false,
+      "id": "Plaza",
+      "name": "Plaza",
+      "service": null,
+      "size": 1,
+      "stats": {
+        "cost": 8000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 90,
+        "land_value_radius": 3,
+        "pollution": 0,
+        "power_draw": 0,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 3,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Families love it.",
+      "category": "Parks",
+      "conducts": false,
+      "id": "Playground",
+      "name": "Playground",
+      "service": null,
+      "size": 1,
+      "stats": {
+        "cost": 12000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 110,
+        "land_value_radius": 3,
+        "pollution": 0,
+        "power_draw": 0,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 4,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Big land value boost over a wide area.",
+      "category": "Parks",
+      "conducts": true,
+      "id": "SportsField",
+      "name": "Sports field",
+      "service": null,
+      "size": 2,
+      "stats": {
+        "cost": 150000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 170,
+        "land_value_radius": 6,
+        "pollution": 0,
+        "power_draw": 2,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 30,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "A landmark that lifts the whole district.",
+      "category": "Parks",
+      "conducts": true,
+      "id": "Stadium",
+      "name": "Stadium",
+      "service": null,
+      "size": 3,
+      "stats": {
+        "cost": 2000000,
+        "demand_bonus": [
+          0,
+          40,
+          0,
+          0
+        ],
+        "jobs": 50,
+        "land_value_bonus": 260,
+        "land_value_radius": 10,
+        "pollution": 0,
+        "power_draw": 30,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 300,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Civic pride: attracts residents to the region.",
+      "category": "Landmarks",
+      "conducts": true,
+      "id": "TownHall",
+      "name": "Town hall",
+      "service": null,
+      "size": 2,
+      "stats": {
+        "cost": 1000000,
+        "demand_bonus": [
+          80,
+          0,
+          0,
+          20
+        ],
+        "jobs": 40,
+        "land_value_bonus": 120,
+        "land_value_radius": 12,
+        "pollution": 0,
+        "power_draw": 10,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 100,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "A statue people travel to see.",
+      "category": "Landmarks",
+      "conducts": false,
+      "id": "Monument",
+      "name": "Monument",
+      "service": null,
+      "size": 1,
+      "stats": {
+        "cost": 600000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 0,
+        "land_value_bonus": 150,
+        "land_value_radius": 6,
+        "pollution": 0,
+        "power_draw": 0,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 20,
+        "water_supply": 0
+      }
+    },
+    {
+      "blurb": "Brings business and industry to the region. Noisy.",
+      "category": "Landmarks",
+      "conducts": true,
+      "id": "Airport",
+      "name": "Airport",
+      "service": null,
+      "size": 4,
+      "stats": {
+        "cost": 4000000,
+        "demand_bonus": [
+          0,
+          80,
+          80,
+          80
+        ],
+        "jobs": 150,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 40,
+        "power_draw": 40,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 0,
+        "upkeep": 500,
+        "water_supply": 0
+      }
+    }
+  ],
+  "config": {
+    "ai_think_interval": 8,
+    "avenue_cost": 2500,
+    "avenue_traffic_percent": 45,
+    "avenue_upkeep": 2,
+    "base_commercial_demand": 20,
+    "base_industrial_demand": 80,
+    "base_office_demand": 10,
+    "base_residential_demand": 80,
+    "bridge_cost_multiplier": 4,
+    "bulldoze_cost": 100,
+    "clear_forest_cost": 300,
+    "commercial_bonus": 40,
+    "commercial_jobs_per_level": 8,
+    "commercial_radius": 3,
+    "crime_cap": 200,
+    "crime_divisor": 12,
+    "crime_radius": 3,
+    "crime_weight": 1,
+    "debt_floor": -500000,
+    "decay_chance_per_mille": 40,
+    "default_tax_rate": 7,
+    "default_utility_price": 4,
+    "dense_min_land_value": 380,
+    "dense_zone_cost": 2500,
+    "education_free_levels": 2,
+    "fire_chance_per_million": 15,
+    "fire_rubble_ticks": 30,
+    "forest_bonus": 50,
+    "forest_radius": 2,
+    "game_length_ticks": 3600,
+    "growth_jitter": 60,
+    "health_free_levels": 4,
+    "high_density_max_level": 6,
+    "industrial_jobs_per_level": 10,
+    "industrial_pollution_per_level": 10,
+    "land_value_base": 200,
+    "land_value_max": 1000,
+    "land_value_smoothing": 6,
+    "low_density_max_level": 3,
+    "map_height": 48,
+    "map_width": 64,
+    "max_growth_per_tick": 4,
+    "max_tax_rate": 20,
+    "neutral_tax_rate": 7,
+    "office_jobs_per_level": 10,
+    "police_crime_reduction_percent": 80,
+    "pollution_cap": 300,
+    "pollution_radius": 5,
+    "pollution_weight": 1,
+    "power_line_cost": 500,
+    "power_line_upkeep": 1,
+    "powered_bonus": 60,
+    "region_growth_percent_per_year": 30,
+    "residents_per_100_commercial_jobs": 300,
+    "residents_per_100_industrial_jobs": 220,
+    "residents_per_100_office_jobs": 450,
+    "residents_per_level": 12,
+    "river_bonus": 120,
+    "river_radius": 3,
+    "road_access_bonus": 60,
+    "road_access_radius": 2,
+    "score_land_value_factor": 20,
+    "service_bonus": 30,
+    "starting_treasury": 2000000,
+    "street_cost": 1000,
+    "street_upkeep": 1,
+    "tax_demand_penalty": 4,
+    "tax_divisor": 1500,
+    "ticks_per_month": 30,
+    "traffic_divisor": 20,
+    "traffic_pollution_divisor": 3,
+    "traffic_radius": 3,
+    "traffic_weight": 1,
+    "water_free_levels": 1,
+    "water_pipe_cost": 500,
+    "water_pipe_upkeep": 1,
+    "watered_bonus": 60,
+    "workers_per_100_jobs": 130,
+    "zone_cost": 1000
+  },
+  "game_version": "0.2.0",
+  "zones": [
+    {
+      "id": "Residential",
+      "letter": "R",
+      "name": "Residential",
+      "per_level": 12
+    },
+    {
+      "id": "Commercial",
+      "letter": "C",
+      "name": "Commercial",
+      "per_level": 8
+    },
+    {
+      "id": "Industrial",
+      "letter": "I",
+      "name": "Industrial",
+      "per_level": 10
+    },
+    {
+      "id": "Office",
+      "letter": "O",
+      "name": "Office",
+      "per_level": 10
+    }
+  ]
+}

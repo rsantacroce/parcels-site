@@ -7,6 +7,8 @@ Plain HTML and CSS, no build step. Preview with `python3 -m http.server` in this
 
 - `index.html`: landing page. Download buttons resolve to the latest release's archives through the GitHub API.
 - `manual.html`: how to play.
+- `pedia.html` + `pedia.json`: the Parcelspedia. Regenerate the JSON from the game repo with
+  `cargo run -p parcels_sim --example pedia --release > ../parcels-site/pedia.json`.
 - `assets.html`: the model list with Meshy prompts. It loads `assets/catalog.json` from the game
   repo's `main` branch and falls back to the copy in this folder.
 - `img/`: screenshots taken with the game's `--shot` flag.
