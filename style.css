@@ -105,7 +105,13 @@ section.alt { background: var(--surface-2); }
 .card h3 { margin-top: 0; }
 .card p { margin: 0; color: var(--muted); }
 
-.gallery { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+.gallery { display: grid; gap: 28px 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.gallery figure:first-child { grid-column: 1 / -1; }
+.shot img { width: 100%; height: auto; }
+a.zoom { display: block; cursor: zoom-in; }
+#viewer { padding: 0; border: 0; background: transparent; max-width: 96vw; max-height: 94vh; cursor: zoom-out; }
+#viewer::backdrop { background: rgba(10, 12, 16, .88); }
+#viewer img { max-width: 96vw; max-height: 94vh; width: auto; height: auto; border-radius: 8px; }
 .gallery figure { margin: 0; }
 .gallery figcaption { color: var(--muted); font-size: .9rem; margin-top: 8px; }
 
@@ -164,4 +170,8 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
   .docs { grid-template-columns: 1fr; gap: 0; }
   .toc { position: static; display: flex; flex-wrap: wrap; gap: 4px 14px; margin-bottom: 20px; }
   .assets { grid-template-columns: 1fr; }
+  .gallery { grid-template-columns: 1fr; }
 }
+
+/* Same frame for every gallery tile after the featured one. */
+.gallery figure:not(:first-child) .shot img { aspect-ratio: 16 / 10; object-fit: cover; }

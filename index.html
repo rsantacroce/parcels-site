@@ -30,11 +30,11 @@
       <h1>One shared map.<br>Separate budgets.</h1>
       <p class="lead">Parcels is a 3D city builder for friends and rivals. Each player owns a parcel of the map and runs its own treasury, but roads, power and water cross every border. Trade with your neighbours, outgrow them, or both.</p>
       <div class="actions">
-        <a class="btn primary" href="#download">Download v<span data-version>0.2.0</span></a>
+        <a class="btn primary" href="#download"><span>Download v<span data-version>0.2.0</span></span></a>
         <a class="btn" href="manual.html">Read the manual</a>
       </div>
       <p class="version">Free and open source · Windows, macOS, Linux · single-player, hot-seat and LAN multiplayer</p>
-      <div class="shot"><img src="img/title.jpg" alt="The Parcels title screen in front of a grown AI city with towers, wind turbines and streets" width="1600" height="1000"></div>
+      <div class="shot"><a class="zoom" href="img/title.jpg"><img src="img/title-1600.jpg" srcset="img/title-1600.jpg 1600w, img/title.jpg 2880w" sizes="(max-width: 1112px) 100vw, 1080px" alt="The Parcels title screen in front of a grown AI city with towers, wind turbines and streets" width="2880" height="1800"></a></div>
     </div>
 
     <section class="alt">
@@ -65,10 +65,11 @@
       <div class="wrap">
         <h2>Screenshots</h2>
         <div class="gallery">
-          <figure><div class="shot"><img src="img/city.jpg" alt="Overhead view of a parcel with apartment towers along the river" loading="lazy" width="1600" height="1000"></div><figcaption>Five years in: towers, shops and factories along the parcel borders.</figcaption></figure>
-          <figure><div class="shot"><img src="img/night.jpg" alt="The same city at night with lit windows" loading="lazy" width="1600" height="1000"></div><figcaption>Night falls and the windows light up.</figcaption></figure>
-          <figure><div class="shot"><img src="img/street.jpg" alt="Street-level view down a road lined with houses and power poles" loading="lazy" width="1600" height="1000"></div><figcaption>Street view: walk, run or fly through what you built.</figcaption></figure>
-          <figure><div class="shot"><img src="img/newgame.jpg" alt="The new game screen with a map preview" loading="lazy" width="1600" height="1000"></div><figcaption>New game: map size, rivers, lakes, neighbours, game length.</figcaption></figure>
+          <figure><div class="shot"><a class="zoom" href="img/city.jpg"><img src="img/city-1600.jpg" srcset="img/city-1600.jpg 1600w, img/city.jpg 2880w" sizes="(max-width: 1112px) 100vw, 1080px" alt="A dense city in year ten with apartment towers, terraces, factories and a river, and the in-game side panel" width="2880" height="1800" loading="lazy"></a></div><figcaption>Year ten: four neighbourhoods grown into one skyline, with the side panel tracking your parcel's budget, power and water trade.</figcaption></figure>
+          <figure><div class="shot"><a class="zoom" href="img/dusk.jpg"><img src="img/dusk-1600.jpg" srcset="img/dusk-1600.jpg 1600w, img/dusk.jpg 2280w" sizes="(max-width: 1112px) 100vw, 1080px" alt="The same city at dusk with lit windows" width="2280" height="1555" loading="lazy"></a></div><figcaption>Dusk. Windows light up across towers and terraces.</figcaption></figure>
+          <figure><div class="shot"><a class="zoom" href="img/street.jpg"><img src="img/street-1600.jpg" srcset="img/street-1600.jpg 1600w, img/street.jpg 2880w" sizes="(max-width: 1112px) 100vw, 1080px" alt="Street-level view down a road lined with houses, power poles and a factory in the distance" width="2880" height="1440" loading="lazy"></a></div><figcaption>Street view: walk, run or fly through what you built.</figcaption></figure>
+          <figure><div class="shot"><a class="zoom" href="img/night.jpg"><img src="img/night-1600.jpg" srcset="img/night-1600.jpg 1600w, img/night.jpg 2280w" sizes="(max-width: 1112px) 100vw, 1080px" alt="The city at night" width="2280" height="1555" loading="lazy"></a></div><figcaption>Night over the river district.</figcaption></figure>
+          <figure><div class="shot"><a class="zoom" href="img/newgame.jpg"><img src="img/newgame-1600.jpg" srcset="img/newgame-1600.jpg 1600w, img/newgame.jpg 2880w" sizes="(max-width: 1112px) 100vw, 1080px" alt="The new game screen with a map preview" width="2880" height="1800" loading="lazy"></a></div><figcaption>New game: map size, rivers, lakes, neighbours, game length, with a live preview.</figcaption></figure>
         </div>
       </div>
     </section>
@@ -81,17 +82,17 @@
           <div class="card">
             <h3>Windows</h3>
             <p>64-bit, Windows 10 or later.</p>
-            <a class="btn primary" data-asset="windows-x86_64" href="https://github.com/rsantacroce/parcels/releases/latest">Download .zip</a>
+            <a class="btn primary" href="https://github.com/rsantacroce/parcels/releases/latest/download/parcels-windows-x86_64.zip">Download .zip</a>
           </div>
           <div class="card">
             <h3>macOS</h3>
             <p>Apple Silicon. Unsigned: run <code>xattr -dr com.apple.quarantine parcels-*</code> once.</p>
-            <a class="btn primary" data-asset="macos-arm64" href="https://github.com/rsantacroce/parcels/releases/latest">Download .tar.gz</a>
+            <a class="btn primary" href="https://github.com/rsantacroce/parcels/releases/latest/download/parcels-macos-arm64.tar.gz">Download .tar.gz</a>
           </div>
           <div class="card">
             <h3>Linux</h3>
             <p>x86_64 with Vulkan; needs ALSA and udev.</p>
-            <a class="btn primary" data-asset="linux-x86_64" href="https://github.com/rsantacroce/parcels/releases/latest">Download .tar.gz</a>
+            <a class="btn primary" href="https://github.com/rsantacroce/parcels/releases/latest/download/parcels-linux-x86_64.tar.gz">Download .tar.gz</a>
           </div>
           <div class="card">
             <h3>From source</h3>
@@ -117,17 +118,24 @@
     </div>
   </footer>
 
+  <dialog id="viewer" aria-label="Screenshot"><img alt=""></dialog>
+
   <script>
-    // Point the download buttons straight at the latest release's archives.
+    // Click a screenshot to see it full size.
+    const viewer = document.getElementById("viewer");
+    document.querySelectorAll("a.zoom").forEach(a => a.addEventListener("click", e => {
+      e.preventDefault();
+      const img = viewer.querySelector("img");
+      img.src = a.href;
+      img.alt = a.querySelector("img").alt;
+      viewer.showModal();
+    }));
+    viewer.addEventListener("click", () => viewer.close());
+
+    // Show the latest release's version on the download button.
     fetch("https://api.github.com/repos/rsantacroce/parcels/releases/latest")
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(rel => {
-        document.querySelectorAll("[data-version]").forEach(e => e.textContent = rel.tag_name.replace(/^v/, ""));
-        document.querySelectorAll("[data-asset]").forEach(a => {
-          const hit = rel.assets.find(x => x.name.includes(a.dataset.asset));
-          if (hit) a.href = hit.browser_download_url;
-        });
-      })
+      .then(rel => document.querySelectorAll("[data-version]").forEach(e => e.textContent = rel.tag_name.replace(/^v/, "")))
       .catch(() => {});
   </script>
 </body>
