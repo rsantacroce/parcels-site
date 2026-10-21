@@ -88,6 +88,35 @@
       }
     },
     {
+      "blurb": "On a subway line. Works with another station on the line. Lets the tallest towers grow.",
+      "category": "Transport",
+      "conducts": true,
+      "era": "Metropolis",
+      "id": "SubwayStation",
+      "name": "Subway station",
+      "service": "Subway",
+      "size": 1,
+      "stats": {
+        "cost": 350000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 10,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 8,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 5,
+        "upkeep": 100,
+        "water_supply": 0
+      }
+    },
+    {
       "blurb": "Cheap, plentiful power. Very dirty.",
       "category": "Power",
       "conducts": true,
@@ -826,6 +855,12 @@
     "street_cost": 1000,
     "street_travel_cost": 4,
     "street_upkeep": 1,
+    "subway_cost": 6000,
+    "subway_fare": 30,
+    "subway_free_levels": 5,
+    "subway_share_percent": 60,
+    "subway_station_riders": 2000,
+    "subway_upkeep": 3,
     "tax_demand_penalty": 4,
     "tax_divisor": 1500,
     "ticks_per_month": 30,

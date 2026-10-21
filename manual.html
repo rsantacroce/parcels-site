@@ -124,11 +124,13 @@
         <tr><td>Bus stop</td><td class="num">$150</td><td>Beside a road. Covers 4 tiles around it once a depot runs its road network.</td></tr>
         <tr><td>Rail track</td><td class="num">$40</td><td>City era. Crosses roads at level crossings and water on bridges (four times the price). Nothing can be built on it.</td></tr>
         <tr><td>Train station</td><td class="num">$6,000</td><td>City era, 2×2, must touch the track and a road, needs power. Covers 6 tiles. Works once its line has a second station or runs to a neighbouring city.</td></tr>
+        <tr><td>Subway line</td><td class="num">$60</td><td>Metropolis era. Underground: runs beneath anything on land, but not under water. Shown with the subway tools or the transit view.</td></tr>
+        <tr><td>Subway station</td><td class="num">$3,500</td><td>Metropolis era, sits on (or beside) the line, needs power. Covers 5 tiles. Works once the line has a second station. The top level of a tower needs one nearby.</td></tr>
         <tr><td>Bus depot</td><td class="num">$4,000</td><td>2×2, beside a road, needs power. Runs buses on the road network it touches, up to 600 riders.</td></tr>
       </table></div>
       <h3>Traffic and commuting</h3>
       <p>Traffic isn't decoration: every few seconds the city works out how each resident gets to work. People take the quickest route along the roads to the nearest job that still has room, and a road's traffic is the number of trips crossing it. Jammed roads lower land value, add pollution and annoy residents. To fix a jam, upgrade the busiest streets to avenues, give people a second route, put jobs closer to homes, or run buses. Homes whose roads don't connect to any job count as out of work.</p>
-      <p>Trains go first: when a home is near a working station, half its commuters take the train to open jobs near another station on the same line, or down the line to a neighbouring city. They never touch the roads. Up to 1,500 riders per station.</p>
+      <p>The subway goes first: 60% of commuters from homes near a working subway station ride it to jobs near another station on the same line, up to 2,000 riders per station. Then trains: when a home is near a working station, half its commuters take the train to open jobs near another station on the same line, or down the line to a neighbouring city. They never touch the roads. Up to 1,500 riders per station.</p>
       <p>When a home and its workplace are both near a working bus stop, 40% of those commuters take the bus instead of driving. The City card's <em>Getting around</em> section shows the average commute, how many ride the bus and anyone with no road to work. Bus fares show in the Budget card.</p>
 
       <h2 id="zones">Zones and growth</h2>
@@ -230,7 +232,7 @@
       <p><strong>Approval matters for growth.</strong> Above 50% it adds to residential demand and below 50% it takes away, so an unpopular mayor sees homes empty out.</p>
 
       <h2 id="overlays">Data views</h2>
-      <p>Number keys <kbd>1</kbd>–<kbd>9</kbd> and <kbd>0</kbd> (or <em>Data views</em> on the left rail) tint the map: city, land value, power, water, density, pollution, traffic, crime, services, and buses and trains. The traffic view colours each road from blue (quiet) through orange (at capacity) to red (jammed); the buses view shows stops and the area they reach. Buildings fade to grey so the ground colours read clearly. The water view also shows pipes.</p>
+      <p>Number keys <kbd>1</kbd>–<kbd>9</kbd> and <kbd>0</kbd> (or <em>Data views</em> on the left rail) tint the map: city, land value, power, water, density, pollution, traffic, crime, services and transit (bus stops, stations and subway tunnels). The traffic view colours each road from blue (quiet) through orange (at capacity) to red (jammed); the buses view shows stops and the area they reach. Buildings fade to grey so the ground colours read clearly. The water view also shows pipes.</p>
 
       <h2 id="saves">Saves and settings</h2>
       <p>Saves live in <code>saves/</code> next to the game: named saves from the menu, <code>quicksave.ron</code> (<kbd>F5</kbd>/<kbd>F9</kbd>) and an autosave whose interval you set in Settings. A save keeps the balance rules it was started with, so tweaking <code>config/balance.ron</code> only affects new games. Saves from v0.2 (the multiplayer edition) can't be loaded in v0.3.</p>
