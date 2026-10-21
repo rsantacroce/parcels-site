@@ -58,6 +58,7 @@
       <a href="#upkeep">Upkeep</a>
       <a href="#utilities">Power and water</a>
       <a href="#approval">Approval</a>
+      <a href="#eras">Eras</a>
       <a href="#commute">Commuting and buses</a>
       <a href="#mayor">Letters and elections</a>
       <a href="#demand">Demand</a>
@@ -140,6 +141,18 @@
           <li><b>Water use</b>: a zone tile needs its level (empty lots need none). Levels above <span data-k="water_free_levels">1</span> won't grow without water.</li>
           <li>Water producers make nothing without power. Pumps and treatment plants that touch the river get their river bonus. Pipes can follow a bridge across water.</li>
         </ul>
+      </section>
+
+      <section class="pedia-sec" id="eras" style="padding:0">
+        <h2>Eras</h2>
+        <p>With eras on (the default), a city starts in the Town era. The next era arrives when the population reaches its target or the calendar passes its year, whichever comes first, and is never lost.</p>
+        <div class="table-scroll"><table>
+          <tr><th>Era</th><th class="num">Residents</th><th class="num">Or from year</th><th>Unlocks</th></tr>
+          <tr><td>Town</td><td class="num">—</td><td class="num">1</td><td>Street, power line, water pipe, low-density residential, commercial and industrial, bus stop and depot, coal, wind, water pump and tower, police, fire, clinic, school, park, plaza, playground</td></tr>
+          <tr><td>City</td><td class="num"><span data-k="era_population.0">1500</span></td><td class="num">4</td><td>Avenue, office, gas plant, solar farm, water treatment, sports field, town hall, monument</td></tr>
+          <tr><td>Metropolis</td><td class="num"><span data-k="era_population.1">6000</span></td><td class="num">7</td><td>Every dense zone, hospital, university, stadium</td></tr>
+          <tr><td>Modern</td><td class="num"><span data-k="era_population.2">15000</span></td><td class="num">11</td><td>Nuclear plant, airport</td></tr>
+        </table></div>
       </section>
 
       <section class="pedia-sec" id="commute" style="padding:0">
@@ -281,7 +294,9 @@
     };
     document.querySelectorAll("[data-k]").forEach(e => {
       const k = e.dataset.k;
-      if (k in derived) e.textContent = derived[k]; else if (k in c) e.textContent = num(c[k]);
+      // "era_population.0" reaches into a list.
+      const v = k.split(".").reduce((o, part) => (o == null ? undefined : o[part]), c);
+      if (k in derived) e.textContent = derived[k]; else if (v !== undefined) e.textContent = num(v);
     });
     document.querySelectorAll("[data-money]").forEach(e => e.textContent = money(c[e.dataset.money]));
     $("per-occ").textContent = money(100 * c.default_tax_rate / c.tax_divisor * TPM);
@@ -437,6 +452,7 @@
         if (s.land_value_bonus) notes.push(`Adds ${s.land_value_bonus} on its own tiles, fading to 0 just past ${s.land_value_radius} tiles; amenities stack up to +400.`);
         if (s.pollution) notes.push(`Pollution ${s.pollution} at the centre, fading over ${c.pollution_radius} tiles; costs up to ${s.pollution} land value nearby.`);
         notes.push(b.conducts ? "Passes power and water to neighbouring tiles." : "Does not pass power or water on.");
+        if (b.era) notes.push(`Available from the ${b.era} era.`);
         sec.append(el("div", { className: "entry", id, dataset: { search: `${b.name} ${b.category} ${b.service || ""} ${b.blurb}` } },
           el("h3", {}, b.name, el("span", { className: "pill", textContent: cat })),
           el("p", { textContent: b.blurb }),
