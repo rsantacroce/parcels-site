@@ -58,6 +58,7 @@
       <a href="#upkeep">Upkeep</a>
       <a href="#utilities">Power and water</a>
       <a href="#approval">Approval</a>
+      <a href="#regions">Regions</a>
       <a href="#eras">Eras</a>
       <a href="#commute">Commuting and buses</a>
       <a href="#mayor">Letters and elections</a>
@@ -153,6 +154,16 @@
           <tr><td>Metropolis</td><td class="num"><span data-k="era_population.1">6000</span></td><td class="num">7</td><td>Every dense zone, hospital, university, stadium</td></tr>
           <tr><td>Modern</td><td class="num"><span data-k="era_population.2">15000</span></td><td class="num">11</td><td>Nuclear plant, airport</td></tr>
         </table></div>
+      </section>
+
+      <section class="pedia-sec" id="regions" style="padding:0">
+        <h2>Regions</h2>
+        <ul>
+          <li>A link exists on an edge when any tile on that edge has a road (road link), a power line (power) or a water pipe (water), and there's a city beyond it.</li>
+          <li>Road link: the neighbour's open jobs (workers its jobs could still take) wait at your edge roads for commuters, and <span data-k="commute_percent">50</span>% of its job seekers drive in to your open jobs. Raw demand rises by <span data-k="region_demand_percent">25</span>% of its open jobs (homes), of its population ÷ <span data-k="residents_per_100_commercial_jobs">300</span> × 100 (shops) and of its job seekers (factories). Its open jobs also count against your jobless rate.</li>
+          <li>Power or water link: a network touching the edge buys up to the neighbour's spare when it's short, at <span data-k="import_price">150</span>¢ per 100 units per tick, and sells its spare to a short neighbour at <span data-k="export_price">80</span>¢.</li>
+          <li>Neighbours are snapshots taken when each city was last saved, sent to the city by a command when you open it, so replays reproduce them.</li>
+        </ul>
       </section>
 
       <section class="pedia-sec" id="commute" style="padding:0">

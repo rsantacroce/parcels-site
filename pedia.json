@@ -741,6 +741,7 @@
       10
     ],
     "eras": true,
+    "export_price": 80,
     "fire_chance_per_million": 15,
     "fire_rubble_ticks": 30,
     "forest_bonus": 50,
@@ -750,6 +751,7 @@
     "growth_jitter": 60,
     "health_free_levels": 4,
     "high_density_max_level": 6,
+    "import_price": 150,
     "industrial_jobs_per_level": 10,
     "industrial_pollution_per_level": 10,
     "land_value_base": 200,
@@ -776,6 +778,7 @@
     "power_line_upkeep": 1,
     "powered_bonus": 60,
     "reelection_percent": 50,
+    "region_demand_percent": 25,
     "region_growth_percent_per_year": 30,
     "residents_per_100_commercial_jobs": 300,
     "residents_per_100_industrial_jobs": 220,
