@@ -639,7 +639,6 @@
     "debt_floor": -500000,
     "decay_chance_per_mille": 40,
     "default_tax_rate": 7,
-    "default_utility_price": 4,
     "dense_min_land_value": 380,
     "dense_zone_cost": 2500,
     "education_free_levels": 2,
@@ -647,7 +646,6 @@
     "fire_rubble_ticks": 30,
     "forest_bonus": 50,
     "forest_radius": 2,
-    "game_length_ticks": 3600,
     "growth_jitter": 60,
     "health_free_levels": 4,
     "high_density_max_level": 6,
@@ -679,7 +677,6 @@
     "river_radius": 3,
     "road_access_bonus": 60,
     "road_access_radius": 2,
-    "score_land_value_factor": 20,
     "service_bonus": 30,
     "starting_treasury": 2000000,
     "street_cost": 1000,
@@ -698,7 +695,7 @@
     "workers_per_100_jobs": 130,
     "zone_cost": 1000
   },
-  "game_version": "0.2.0",
+  "game_version": "0.3.0",
   "zones": [
     {
       "id": "Residential",

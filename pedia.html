@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Parcelspedia</title>
-  <meta name="description" content="Every item in Parcels with its full stats, and exactly how taxes, upkeep, trade, demand, growth and land value are calculated.">
+  <meta name="description" content="Every item in Parcels with its full stats, and exactly how taxes, upkeep, demand, growth, land value and approval are calculated.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Crect width=%229%22 height=%229%22 rx=%222%22 fill=%22%234f9e49%22/%3E%3Crect x=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%233f78c9%22/%3E%3Crect y=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%23c99a1f%22/%3E%3Crect x=%2211%22 y=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%238a63c4%22/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -56,8 +56,8 @@
       <a href="#taxes">Taxes</a>
       <a href="#calculator">Revenue calculator</a>
       <a href="#upkeep">Upkeep</a>
-      <a href="#trade">Power and water trade</a>
-      <a href="#score">Score and winning</a>
+      <a href="#utilities">Power and water</a>
+      <a href="#approval">Approval</a>
       <a href="#demand">Demand</a>
       <a href="#growth">Growth</a>
       <a href="#landvalue">Land value</a>
@@ -80,27 +80,28 @@
 
       <section class="pedia-sec" id="tick" style="padding:0">
         <h2>A game tick</h2>
-        <p>Every tick runs six stages in order, identically on every machine:</p>
+        <p>Every tick runs seven stages in order, so a replay always reproduces the same city:</p>
         <ol>
-          <li><b>Commands</b>: everything players and the AI asked for is applied, sorted by author and sequence.</li>
-          <li><b>Utilities</b>: power and water networks are flood-filled across parcel borders. Each owner uses their own supply first, then buys from the cheapest neighbour selling. Power is settled before water, because pumps need power.</li>
-          <li><b>Demand</b>: map-wide residential, commercial, industrial and office demand, shifted per player by their tax rate.</li>
-          <li><b>Growth</b>: every eligible zone tile on the map competes for one shared pool of newcomers.</li>
+          <li><b>Commands</b>: everything you asked for is applied, in order.</li>
+          <li><b>Utilities</b>: power and water networks are flood-filled and each network serves its tiles from its own supply. Power is settled before water, because pumps need power.</li>
+          <li><b>Demand</b>: residential, commercial, industrial and office demand, shifted by your tax rate.</li>
+          <li><b>Growth</b>: every eligible zone tile competes for one shared pool of newcomers.</li>
           <li><b>Land value</b>: service coverage, traffic, pollution and crime are recomputed and land value moves toward its target.</li>
-          <li><b>Economy</b>: taxes in, upkeep out, trades paid, treasury clamped at the debt floor, scores updated.</li>
+          <li><b>Economy</b>: taxes in, upkeep out, treasury clamped at the debt floor.</li>
+          <li><b>Status</b>: residents score nine parts of city life and approval drifts toward the total.</li>
         </ol>
-        <p>The game lasts <b data-k="game_years">10</b> years (<span data-k="game_length_ticks">3600</span> ticks) by default.</p>
+        <p>There is no time limit: the city runs as long as you like.</p>
       </section>
 
       <section class="pedia-sec" id="taxes" style="padding:0">
         <h2>Taxes</h2>
-        <p>Every powered, occupied zone tile you own pays tax every tick:</p>
+        <p>Every powered, occupied zone tile pays tax every tick:</p>
         <div class="formula">tax per tick (¢) = occupants × land value × tax rate % ÷ <span data-k="tax_divisor">1500</span><br>tax per month = tax per tick × <span data-k="ticks_per_month">30</span></div>
         <ul>
           <li><b>Occupants</b> = level × people (or jobs) per level of that zone. See <a href="#zones">Zones</a>.</li>
           <li><b>Industry is taxed at base land value</b> (<span data-k="land_value_base">200</span>) wherever it stands: factories don't care about the view. Every other zone pays on its tile's actual land value.</li>
           <li>Unpowered tiles pay nothing.</li>
-          <li>Tax rate runs from 0 to <span data-k="max_tax_rate">20</span>%, default <span data-k="default_tax_rate">7</span>%. Each point above <span data-k="neutral_tax_rate">7</span>% cuts your demand (see <a href="#demand">Demand</a>), each point below raises it.</li>
+          <li>Tax rate runs from 0 to <span data-k="max_tax_rate">20</span>%, default <span data-k="default_tax_rate">7</span>%. Each point above <span data-k="neutral_tax_rate">7</span>% cuts demand and costs approval (see <a href="#demand">Demand</a>), each point below raises it.</li>
         </ul>
         <p>A useful rule of thumb at <span data-k="default_tax_rate">7</span>%: <b>each occupant pays <span id="per-occ"></span> a month per 100 points of land value.</b></p>
       </section>
@@ -122,33 +123,44 @@
 
       <section class="pedia-sec" id="upkeep" style="padding:0">
         <h2>Upkeep</h2>
-        <p>Paid every tick for everything you have built on your parcel. Zones themselves cost nothing to keep.</p>
+        <p>Paid every tick for everything you have built. Zones themselves cost nothing to keep.</p>
         <div class="table-scroll"><table id="upkeep-table"><tr><th>Item</th><th class="num">Per tick</th><th class="num">Per month</th></tr></table></div>
         <p>Bridges (roads on water) cost <b>double</b> upkeep. Each placed building's upkeep is listed on its entry below.</p>
       </section>
 
-      <section class="pedia-sec" id="trade" style="padding:0">
-        <h2>Power and water trade</h2>
-        <p>Networks ignore parcel borders. Within one connected network, every owner first covers their own demand from their own plants, pumps and towers. Owners who are still short buy from neighbours who have ticked <b>Sell surplus</b>, cheapest price first. The buyer pays the seller every tick:</p>
-        <div class="formula">trade per tick (¢) = units bought × seller's price (¢ per unit per tick)</div>
+      <section class="pedia-sec" id="utilities" style="padding:0">
+        <h2>Power and water</h2>
+        <p>Each connected network adds up its supply and serves its tiles in order, water producers first. When demand outstrips supply, the remaining tiles go without and count as <b>unserved</b>.</p>
         <ul>
-          <li>The AI offers at <span data-k="default_utility_price">4</span>¢ per unit per tick. At that price, one unit sold all month earns <span id="unit-month"></span>.</li>
           <li><b>Power use</b>: a zone tile needs 1 + its level; a building needs its listed power draw.</li>
           <li><b>Water use</b>: a zone tile needs its level (empty lots need none). Levels above <span data-k="water_free_levels">1</span> won't grow without water.</li>
-          <li>Water producers make nothing without power. Pumps and treatment plants that touch the river get their river bonus.</li>
+          <li>Water producers make nothing without power. Pumps and treatment plants that touch the river get their river bonus. Pipes can follow a bridge across water.</li>
         </ul>
       </section>
 
-      <section class="pedia-sec" id="score" style="padding:0">
-        <h2>Score and winning</h2>
-        <div class="formula">score = treasury + (sum of land value of every tile on your parcel) × <span data-k="score_land_value_factor">20</span>¢</div>
-        <p>So each point of land value anywhere on your parcel is worth <b><span id="lv-point"></span></b> of score, as much as cash. A 32×24 parcel at an average land value of 400 is worth <b><span id="lv-example"></span></b>. The highest score when time runs out wins.</p>
+      <section class="pedia-sec" id="approval" style="padding:0">
+        <h2>Approval</h2>
+        <p>Residents score nine factors from what the homes around the city experience, averaged over everyone who lives there:</p>
+        <div class="table-scroll"><table>
+          <tr><th>Factor</th><th>Score</th><th class="num">Range</th></tr>
+          <tr><td>Jobs</td><td>10 − jobless% ÷ 2, where jobless = residents beyond (all jobs × <span data-k="workers_per_100_jobs">130</span>/100)</td><td class="num">−20…10</td></tr>
+          <tr><td>Power &amp; water</td><td>5 − 25 × unserved ÷ demanded</td><td class="num">−20…5</td></tr>
+          <tr><td>Safety</td><td>8 − average crime ÷ 5</td><td class="num">−20…8</td></tr>
+          <tr><td>Clean air</td><td>8 − average pollution ÷ 6</td><td class="num">−20…8</td></tr>
+          <tr><td>Schools &amp; health</td><td>10 × (average number of services, school and health, covering a home: 0–2) − 10</td><td class="num">−10…10</td></tr>
+          <tr><td>Taxes</td><td>3 × (<span data-k="neutral_tax_rate">7</span> − tax rate)</td><td class="num">−20…10</td></tr>
+          <tr><td>Traffic</td><td>5 − (busiest road next to home) ÷ 4</td><td class="num">−15…5</td></tr>
+          <tr><td>Neighbourhoods</td><td>(average land value − <span data-k="land_value_base">200</span>) ÷ 20</td><td class="num">−10…10</td></tr>
+          <tr><td>City finances</td><td>−10 while the treasury is below zero</td><td class="num">−10…0</td></tr>
+        </table></div>
+        <div class="formula">target approval = 50% + sum of all factors (as %), clamped to 0…100%<br>each tick approval closes 1/40 of the gap to the target (at least 0.1%)</div>
+        <p>The <b>top issue</b> is the factor with the lowest negative score. Mood words: 80%+ Thriving, 65% Happy, 50% Content, 35% Uneasy, 20% Unhappy, below that Angry.</p>
         <p>Your treasury starts at <b><span data-money="starting_treasury"></span></b>. Spending needs cash in hand. Upkeep can push you below zero, but never below <b><span data-money="debt_floor"></span></b>.</p>
       </section>
 
       <section class="pedia-sec" id="demand" style="padding:0">
         <h2>Demand</h2>
-        <p>Workers, jobs and shoppers move freely across the map, so raw demand is computed for the whole map and then normalised to −1000…1000:</p>
+        <p>Raw demand is the balance of residents and jobs, normalised to −1000…1000:</p>
         <div class="formula">
           region = 100% + <span data-k="region_growth_percent_per_year">30</span>% per game year<br>
           R = <span data-k="base_residential_demand">80</span>×region + bonuses + (all jobs incl. public) × <span data-k="workers_per_100_jobs">130</span>/100 − residents<br>
@@ -157,17 +169,17 @@
           O = <span data-k="base_office_demand">10</span>×region + bonuses + residents × 100/<span data-k="residents_per_100_office_jobs">450</span> − office jobs<br>
           bar = raw × 1000 ÷ (current size + 100 for R, + 50 for C/I/O)
         </div>
-        <p>Your own bars are the map-wide bars minus <b>(your tax − <span data-k="neutral_tax_rate">7</span>) × <span data-k="tax_demand_penalty">4</span> × 10</b>. At 10% tax you lose 120 points on every bar; at 4% you gain 120. Bonuses come from powered landmarks (stadium, town hall, airport); see their entries.</p>
-        <p>If your demand for a zone falls below −500, occupied tiles of that zone start leaving even when they are well served.</p>
+        <p>The bars you see are the raw bars minus <b>(your tax − <span data-k="neutral_tax_rate">7</span>) × <span data-k="tax_demand_penalty">4</span> × 10</b>. At 10% tax you lose 120 points on every bar; at 4% you gain 120. Bonuses come from powered landmarks (stadium, town hall, airport); see their entries.</p>
+        <p>If demand for a zone falls below −500, occupied tiles of that zone start leaving even when they are well served.</p>
       </section>
 
       <section class="pedia-sec" id="growth" style="padding:0">
         <h2>Growth</h2>
-        <p>Each tick, up to <span data-k="max_growth_per_tick">4</span> tiles per zone type, across the whole map, move up or down a level. Which ones is decided by competition:</p>
-        <div class="formula">growth score = land value + your demand ÷ 4 + random 0…<span data-k="growth_jitter">60</span></div>
+        <p>Each tick, up to <span data-k="max_growth_per_tick">4</span> tiles per zone type, move up or down a level. Which ones is decided by competition:</p>
+        <div class="formula">growth score = land value + demand ÷ 4 + random 0…<span data-k="growth_jitter">60</span></div>
         <ul>
-          <li>Only tiles that are <b>sustained</b> (powered, a road within <span data-k="road_access_radius">2</span> tiles, and watered if above level <span data-k="water_free_levels">1</span>) and whose owner has positive demand can grow. The highest scores win, so cheap land loses newcomers to valuable land, including your neighbour's.</li>
-          <li>When map demand is negative, the lowest-scoring occupied tiles shrink first.</li>
+          <li>Only tiles that are <b>sustained</b> (powered, a road within <span data-k="road_access_radius">2</span> tiles, and watered if above level <span data-k="water_free_levels">1</span>) can grow while demand is positive. The highest scores win, so cheap land loses newcomers to valuable land.</li>
+          <li>When demand is negative, the lowest-scoring occupied tiles shrink first.</li>
           <li>A tile that isn't sustained loses a level with a <span data-k="decay_pct">4</span>% chance each tick.</li>
         </ul>
         <h3>What each level needs</h3>
@@ -178,7 +190,7 @@
         <h2>Land value</h2>
         <p>Every tile has a land value from 0 to <span data-k="land_value_max">1000</span>. Each tick it moves 1/<span data-k="land_value_smoothing">6</span> of the way toward a target:</p>
         <div class="table-scroll"><table id="lv-table"><tr><th>Effect</th><th class="num">Points</th><th>Notes</th></tr></table></div>
-        <p>Amenities, nature and shops spread by distance: full strength on the source tile, fading linearly to zero just past the radius. Effects ignore parcel borders, so a neighbour's park helps you and their factory hurts you.</p>
+        <p>Amenities, nature and shops spread by distance: full strength on the source tile, fading linearly to zero just past the radius.</p>
       </section>
 
       <section class="pedia-sec" id="effects" style="padding:0">
@@ -238,7 +250,6 @@
     // Inline values.
     const derived = {
       version: data.game_version,
-      game_years: c.game_length_ticks / (TPM * 12),
       decay_pct: c.decay_chance_per_mille / 10,
     };
     document.querySelectorAll("[data-k]").forEach(e => {
@@ -247,9 +258,6 @@
     });
     document.querySelectorAll("[data-money]").forEach(e => e.textContent = money(c[e.dataset.money]));
     $("per-occ").textContent = money(100 * c.default_tax_rate / c.tax_divisor * TPM);
-    $("unit-month").textContent = perMonth(c.default_utility_price);
-    $("lv-point").textContent = money(c.score_land_value_factor);
-    $("lv-example").textContent = money(32 * 24 * 400 * c.score_land_value_factor);
 
     // Zones.
     const zones = data.zones;
@@ -392,12 +400,10 @@
         if (s.power_supply) {
           notes.push(`${money(s.cost / s.power_supply)} to build per unit of power; ${money(s.upkeep * TPM / s.power_supply)} upkeep per unit per month.`);
           notes.push(`Powers about ${Math.floor(s.power_supply / 3)} level-2 zone tiles (3 power each).`);
-          notes.push(`Sold in full at ${c.default_utility_price}¢: ${perMonth(s.power_supply * c.default_utility_price)}/mo, against ${perMonth(s.upkeep)}/mo upkeep.`);
         }
         if (s.water_supply) {
           const w = s.water_supply + s.river_bonus;
           notes.push(`Waters about ${Math.floor(s.water_supply / 2)} level-2 tiles (${Math.floor(w / 2)} by the river).`);
-          notes.push(`Sold in full at ${c.default_utility_price}¢: ${perMonth(s.water_supply * c.default_utility_price)}/mo (${perMonth(w * c.default_utility_price)} by the river).`);
         }
         if (s.power_draw) notes.push(`Does nothing without ${s.power_draw} power; an unpowered building shows a red beacon.`);
         if (s.jobs) notes.push(`Its ${s.jobs} public jobs count toward residential demand (+${Math.round(s.jobs * c.workers_per_100_jobs / 100)} raw R) while it runs.`);

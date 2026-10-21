@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Parcels Manual</title>
-  <meta name="description" content="How to play Parcels: controls, zones, growth rules, utilities, services, the economy and multiplayer.">
+  <meta name="description" content="How to play Parcels: the screen, controls, zones, growth rules, utilities, services, money and keeping your residents happy.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 20 20%22%3E%3Crect width=%229%22 height=%229%22 rx=%222%22 fill=%22%234f9e49%22/%3E%3Crect x=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%233f78c9%22/%3E%3Crect y=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%23c99a1f%22/%3E%3Crect x=%2211%22 y=%2211%22 width=%229%22 height=%229%22 rx=%222%22 fill=%22%238a63c4%22/%3E%3C/svg%3E">
@@ -27,6 +27,7 @@
     <nav class="toc" aria-label="Contents">
       <a href="#start">Getting started</a>
       <a href="#goal">The goal</a>
+      <a href="#screen">The screen</a>
       <a href="#controls">Controls</a>
       <a href="#roads">Roads</a>
       <a href="#zones">Zones and growth</a>
@@ -34,8 +35,8 @@
       <a href="#services">Services</a>
       <a href="#parks">Parks and landmarks</a>
       <a href="#economy">Money</a>
-      <a href="#overlays">Overlays</a>
-      <a href="#multiplayer">Multiplayer</a>
+      <a href="#residents">Your residents</a>
+      <a href="#overlays">Data views</a>
       <a href="#saves">Saves and settings</a>
       <a href="#cli">Command line</a>
       <a href="#tips">Tips</a>
@@ -45,28 +46,36 @@
       <div class="note" style="margin-top:0">Looking for exact numbers (revenue per zone and level, every building's stats, the land value and demand formulas)? See the <a href="pedia.html">Parcelspedia</a>.</div>
 
       <h2 id="start">Getting started</h2>
-      <p>Download the build for your system from the <a href="./#download">download section</a>, unpack it, and run <code>parcels</code> from inside the unpacked folder (it reads <code>config/balance.ron</code> from there and writes saves to <code>saves/</code>). On macOS, clear the download quarantine once with <code>xattr -dr com.apple.quarantine parcels-*</code>.</p>
-      <p>The title screen shows an AI city growing in the background and offers:</p>
+      <div class="note" style="margin-top:0">This manual covers the single-player city builder coming in v0.3. Until it is released, <a href="./#download">build it from source</a>; the v0.2 downloads are the earlier multiplayer edition.</div>
+      <p>Unpack the game and run <code>parcels</code> from inside its folder (it reads <code>config/balance.ron</code> from there and writes saves to <code>saves/</code>). On macOS, clear the download quarantine once with <code>xattr -dr com.apple.quarantine parcels-*</code>.</p>
+      <p>The title screen shows a city growing by itself in the background and offers:</p>
       <ul>
         <li><strong>Continue</strong>: the most recent save.</li>
-        <li><strong>New game</strong>: map size (64×48 to 256×256), rivers, lakes, woods, number of AI neighbours, hot-seat players, game length, starting money, fires and seed, with a live preview of the map.</li>
-        <li><strong>Load game</strong>: named saves with their date, map and players.</li>
-        <li><strong>Play with a friend</strong>: host a new or saved game, join by address, or play hot-seat.</li>
+        <li><strong>New city</strong>: the city's name, map size (64×48 to 256×256), rivers, lakes, woods, starting money, fires and seed, with a live preview of the map.</li>
+        <li><strong>Load city</strong>: named saves with their date, population and treasury.</li>
         <li><strong>Settings</strong>: volume, mouse, shadows, day/night speed, cars and people, interface size, autosave.</li>
       </ul>
 
       <h2 id="goal">The goal</h2>
-      <p>The map is split into <strong>parcels</strong>, one per player. Each parcel has an owner and its own treasury, and you can only build on yours. When the time limit runs out (10 game years by default), the player with the highest <strong>score</strong> wins. Score is your treasury plus the land value of your parcel.</p>
-      <p>Land value is what grows your score, and your neighbours affect it. Their parks, shops and services lift land near the border. Their pollution and traffic drag it down.</p>
+      <p>There is no time limit and no score. Parcels is a sandbox: build the city you want. What keeps you honest is money (you can't build without cash in hand) and your residents, whose opinion of you shows up as the <a href="#residents">mayor's approval rating</a>. The game cheers when the population passes 100, 500, 1,000, 2,500 and so on.</p>
+
+      <h2 id="screen">The screen</h2>
+      <ul>
+        <li><strong>Left rail</strong>: Inspect, Zoning, Roads, Power, Water, Services, Parks, Landmarks, Demolish and Data views. Clicking a category opens a list of everything in it, with icons and prices.</li>
+        <li><strong>Right rail</strong>: the City card (approval and what residents think), the Budget card (money, tax rate, power and water), the isometric/3D camera switch, street view, sound, help and the game menu.</li>
+        <li><strong>Dashboard</strong> along the bottom: minimap (click or drag to move the camera), city name and date, speed buttons, the approval meter, treasury with net income per month, population, mood, jobless rate, power and water status, the top issue and the RCIO demand chart.</li>
+        <li>Hover a building with Inspect to see what it is and how it's doing; click it to open the inspector.</li>
+      </ul>
 
       <h2 id="controls">Controls</h2>
       <h3>Camera</h3>
       <div class="table-scroll"><table>
         <tr><th>Key</th><th>Action</th></tr>
         <tr><td><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>, arrows, screen edge, right-drag</td><td>Pan the map</td></tr>
-        <tr><td>Middle-drag, <kbd>Q</kbd> / <kbd>E</kbd></td><td>Rotate</td></tr>
+        <tr><td><kbd>Q</kbd> / <kbd>E</kbd></td><td>Turn a quarter (isometric view) or rotate (3D camera)</td></tr>
         <tr><td>Mouse wheel</td><td>Zoom toward the cursor</td></tr>
-        <tr><td><kbd>PgUp</kbd> / <kbd>PgDn</kbd></td><td>Tilt</td></tr>
+        <tr><td><kbd>T</kbd></td><td>Switch between the isometric view and the free 3D camera</td></tr>
+        <tr><td>Middle-drag, <kbd>PgUp</kbd> / <kbd>PgDn</kbd></td><td>Rotate and tilt (3D camera)</td></tr>
         <tr><td><kbd>V</kbd></td><td>Street view. Walk with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> and the mouse, <kbd>Shift</kbd> to run, <kbd>F</kbd> to fly, <kbd>V</kbd> or <kbd>Esc</kbd> to return. Build tools work at the crosshair.</td></tr>
       </table></div>
       <h3>Tools</h3>
@@ -84,14 +93,14 @@
       <h3>Game</h3>
       <div class="table-scroll"><table>
         <tr><th>Key</th><th>Action</th></tr>
-        <tr><td><kbd>1</kbd> – <kbd>0</kbd></td><td>Overlays (press again to clear)</td></tr>
+        <tr><td><kbd>1</kbd> – <kbd>9</kbd></td><td>Data views (press again to clear)</td></tr>
         <tr><td><kbd>Space</kbd></td><td>Pause</td></tr>
         <tr><td><kbd>+</kbd> / <kbd>−</kbd></td><td>Game speed (1×, 2×, 4×, 8×)</td></tr>
-        <tr><td><kbd>Tab</kbd></td><td>Switch parcel owner (hot-seat)</td></tr>
         <tr><td><kbd>F5</kbd> / <kbd>F9</kbd></td><td>Quick-save / quick-load</td></tr>
         <tr><td><kbd>F10</kbd></td><td>Menu</td></tr>
         <tr><td><kbd>H</kbd></td><td>Help</td></tr>
-        <tr><td><kbd>`</kbd></td><td>Toggle the side panel</td></tr>
+        <tr><td><kbd>M</kbd></td><td>Sound on/off</td></tr>
+        <tr><td><kbd>`</kbd></td><td>Open or close the City card</td></tr>
       </table></div>
 
       <h2 id="roads">Roads</h2>
@@ -103,7 +112,7 @@
       </table></div>
 
       <h2 id="zones">Zones and growth</h2>
-      <p>You don't build houses, shops or factories yourself. You zone land, and buildings move in when there is demand. The four bars at the top of the screen show demand for <span class="chip" style="background:var(--res)"></span>residential, <span class="chip" style="background:var(--com)"></span>commercial, <span class="chip" style="background:var(--ind)"></span>industrial and <span class="chip" style="background:var(--off)"></span>office.</p>
+      <p>You don't build houses, shops or factories yourself. You zone land, and buildings move in when there is demand. The RCIO chart in the dashboard shows demand for <span class="chip" style="background:var(--res)"></span>residential, <span class="chip" style="background:var(--com)"></span>commercial, <span class="chip" style="background:var(--ind)"></span>industrial and <span class="chip" style="background:var(--off)"></span>office.</p>
       <div class="table-scroll"><table>
         <tr><th>Zone</th><th class="num">Low density</th><th class="num">Dense</th><th>What grows</th></tr>
         <tr><td><span class="chip" style="background:var(--res)"></span>Residential</td><td class="num">$10/tile</td><td class="num">$25/tile</td><td>Cottages and houses, then terraces; dense: walk-ups, then apartment towers</td></tr>
@@ -111,7 +120,7 @@
         <tr><td><span class="chip" style="background:var(--ind)"></span>Industrial</td><td class="num">$10/tile</td><td class="num">$25/tile</td><td>Workshops; dense: heavy factories with stacks and tanks</td></tr>
         <tr><td><span class="chip" style="background:var(--off)"></span>Office</td><td class="num">$10/tile</td><td class="num">$25/tile</td><td>Office blocks, then tiered skyscrapers</td></tr>
       </table></div>
-      <p>A lot grows one level at a time. Low-density zones stop at level 3, dense zones go up to level 6. Every eligible lot on the whole map competes for the same pool of newcomers, and the lots with the highest land value win.</p>
+      <p>A lot grows one level at a time. Low-density zones stop at level 3, dense zones go up to level 6. Every eligible lot competes for the same pool of newcomers, and the lots with the highest land value win.</p>
       <h3>What a lot needs to reach the next level</h3>
       <div class="table-scroll"><table>
         <tr><th>Requirement</th><th>From</th></tr>
@@ -126,7 +135,7 @@
 
       <h2 id="utilities">Power and water</h2>
       <p>Power lines and water pipes cost $5 per tile. Zones and most buildings pass power and water on to their neighbours, so a block of zoned tiles only needs one connection. Parks, plazas, playgrounds and monuments don't conduct.</p>
-      <p>Networks run across parcel borders. Each owner uses their own supply first, then buys from the cheapest neighbour selling a surplus. Tick <strong>Sell surplus at</strong> in the side panel and set a price to earn from your spare capacity.</p>
+      <p>Every connected network shares its supply. If demand outstrips it, the tiles at the far end go without, and the dashboard's Power &amp; water row turns red. Pumps need power to pump, so they are served first. Pipes can follow a bridge across the river.</p>
       <div class="table-scroll"><table>
         <tr><th>Building</th><th>Size</th><th class="num">Cost</th><th class="num">Upkeep/mo</th><th class="num">Supply</th><th>Notes</th></tr>
         <tr><td>Coal plant</td><td>2×2</td><td class="num">$3,000</td><td class="num">$30</td><td class="num">240 ⚡</td><td>Cheap, very dirty (pollution 60)</td></tr>
@@ -140,7 +149,7 @@
       </table></div>
 
       <h2 id="services">Services</h2>
-      <p>A service covers every tile within its radius, on both sides of a parcel border, but only while it has power. An unpowered service shows a red beacon.</p>
+      <p>A service covers every tile within its radius, but only while it has power. An unpowered service shows a red beacon.</p>
       <div class="table-scroll"><table>
         <tr><th>Building</th><th>Size</th><th class="num">Cost</th><th class="num">Upkeep/mo</th><th class="num">Radius</th><th>Effect</th></tr>
         <tr><td>Police station</td><td>1×1</td><td class="num">$2,500</td><td class="num">$24</td><td class="num">10</td><td>Cuts crime</td></tr>
@@ -165,44 +174,48 @@
       </table></div>
 
       <h2 id="economy">Money</h2>
-      <p>The exact formulas and a revenue calculator are in the <a href="pedia.html#taxes">Parcelspedia</a>. Each month you collect taxes from the buildings on your parcel, pay upkeep for everything you built, and settle power and water trades with your neighbours. The side panel shows all three.</p>
+      <p>The exact formulas and a revenue calculator are in the <a href="pedia.html#taxes">Parcelspedia</a>. Each month you collect taxes from your buildings and pay upkeep for everything you built. The Budget card shows both, and the dashboard shows the net per month next to the treasury.</p>
       <ul>
-        <li><strong>Tax rate</strong> (0–20%, default 7%). Above 7% demand for your parcel falls, below it demand rises. Demand is shared across the map, so a lower tax pulls newcomers away from your neighbours.</li>
+        <li><strong>Tax rate</strong> (0–20%, default 7%, set in the Budget card). Above 7% demand falls and residents grumble; below it demand rises and they're pleased.</li>
         <li><strong>Debt.</strong> Building needs cash in hand. Upkeep can push your treasury below zero, but never below −$5,000.</li>
         <li><strong>Land value</strong> (0–1000) comes from parks, the river, shops, services and utilities, minus pollution and traffic, spread by distance.</li>
       </ul>
 
-      <h2 id="overlays">Overlays</h2>
-      <p>Number keys <kbd>1</kbd>–<kbd>0</kbd> (or the eye menu at the top right) tint the map: land value, power, water, density, pollution, traffic, crime, services and owners. Buildings fade to grey so the ground colours read clearly. The water overlay also shows pipes.</p>
+      <h2 id="residents">Your residents</h2>
+      <p>Residents rate nine parts of city life, judged from what the homes around the city actually experience, weighted by how many people live there:</p>
+      <div class="table-scroll"><table>
+        <tr><th>Factor</th><th>Better when</th></tr>
+        <tr><td>Jobs</td><td>There are enough jobs for everyone (the dashboard shows the jobless rate)</td></tr>
+        <tr><td>Power &amp; water</td><td>No home goes without</td></tr>
+        <tr><td>Safety</td><td>Crime is low; police stations cut it</td></tr>
+        <tr><td>Clean air</td><td>Industry and power plants are kept away from homes</td></tr>
+        <tr><td>Schools &amp; health</td><td>Homes are covered by a school and a clinic or hospital</td></tr>
+        <tr><td>Taxes</td><td>The rate is at or below 7%</td></tr>
+        <tr><td>Traffic</td><td>Streets near homes aren't jammed; avenues help</td></tr>
+        <tr><td>Neighbourhoods</td><td>Land value is high: parks, the river, shops, services</td></tr>
+        <tr><td>City finances</td><td>The treasury isn't in debt</td></tr>
+      </table></div>
+      <p>Their sum sets the <strong>mayor's approval</strong> (0–100%), which moves gradually so one bad month doesn't swing it. The City card shows each factor as a bar, a mood word (Thriving, Happy, Content, Uneasy, Unhappy, Angry) and the <strong>top issue</strong>: the factor dragging approval down most, in your residents' words.</p>
 
-      <h2 id="multiplayer">Multiplayer</h2>
-      <ul>
-        <li><strong>Hot-seat:</strong> several humans on one computer. <kbd>Tab</kbd> switches whose parcel you are building on.</li>
-        <li><strong>Host:</strong> <em>Play with a friend → Host</em> starts a new or saved game and shows the address to share. The default port is 5757 (UDP). Open it on your firewall or router to play over the internet.</li>
-        <li><strong>Join:</strong> <em>Play with a friend → Join</em> and enter the host's address, for example <code>192.168.1.20:5757</code>.</li>
-        <li>Late joiners take over an empty or AI parcel. When a player leaves, the AI takes their parcel back.</li>
-        <li>A dedicated, headless host: <code>parcels-server --slots 4 --wait 2 --map 192x144</code>.</li>
-      </ul>
-      <p>The host owns the clock. Every player's commands go through it, everyone runs the same deterministic simulation, and the clients check a state hash every 30 ticks to catch and repair any drift.</p>
+      <h2 id="overlays">Data views</h2>
+      <p>Number keys <kbd>1</kbd>–<kbd>9</kbd> (or <em>Data views</em> on the left rail) tint the map: city, land value, power, water, density, pollution, traffic, crime and services. Buildings fade to grey so the ground colours read clearly. The water view also shows pipes.</p>
 
       <h2 id="saves">Saves and settings</h2>
-      <p>Saves live in <code>saves/</code> next to the game: named saves from the menu, <code>quicksave.ron</code> (<kbd>F5</kbd>/<kbd>F9</kbd>) and an autosave whose interval you set in Settings. A save keeps the balance rules it was started with, so tweaking <code>config/balance.ron</code> only affects new games. Saves from v0.1 can't be loaded in v0.2.</p>
+      <p>Saves live in <code>saves/</code> next to the game: named saves from the menu, <code>quicksave.ron</code> (<kbd>F5</kbd>/<kbd>F9</kbd>) and an autosave whose interval you set in Settings. A save keeps the balance rules it was started with, so tweaking <code>config/balance.ron</code> only affects new games. Saves from v0.2 (the multiplayer edition) can't be loaded in v0.3.</p>
 
       <h2 id="cli">Command line</h2>
 <pre><code>parcels                                      # title screen
-parcels --solo --ai 3 --map 128x96           # straight into a game vs 3 AI neighbours
-parcels --host --slots 4 --name Rob          # host a LAN game
-parcels --join 192.168.1.20:5757 --name Ana  # join one
+parcels --new --map 128x96 --city "New Harbor"  # straight into a new city
 parcels --load quicksave                     # load a save by name or path
-parcels --seed 42                            # fixed map seed
-parcels-server --slots 4 --wait 2 --map 192x144</code></pre>
+parcels --seed 42 --name Rob                 # fixed map seed, mayor's name
+parcels --verify-replay saves/replay.ron     # check a replay reproduces exactly</code></pre>
 
       <h2 id="tips">Tips</h2>
       <ul>
         <li>Start small: a short street, a block of residential and industrial, a wind turbine or coal plant, a water tower. Add commercial once you have residents.</li>
         <li>Lots by the river get a land value bonus, and pumps there make far more water.</li>
-        <li>Keep heavy industry and coal downwind of your best housing, or on the border with a rival.</li>
-        <li>Selling surplus power to a neighbour pays steadily, but it also helps them grow.</li>
+        <li>Keep heavy industry and coal plants well away from your best housing: pollution costs land value and approval.</li>
+        <li>Watch the top issue in the dashboard. It tells you, in plain words, what to build next.</li>
         <li>Parks are the cheapest land value there is. Scatter them through your residential blocks.</li>
         <li>Dense zones need land value 380 or more before they build towers. Prepare the land with parks and services first.</li>
       </ul>
@@ -211,7 +224,7 @@ parcels-server --slots 4 --wait 2 --map 192x144</code></pre>
 
   <footer>
     <div class="wrap">
-      <span>Parcels manual · v0.2</span>
+      <span>Parcels manual · v0.3</span>
       <span><a href="./">Home</a> · <a href="pedia.html">Parcelspedia</a> · <a href="assets.html">Assets</a> · <a href="https://github.com/rsantacroce/parcels/issues">Report a problem</a></span>
     </div>
   </footer>
