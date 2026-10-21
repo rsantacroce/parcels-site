@@ -59,6 +59,35 @@
       }
     },
     {
+      "blurb": "Beside rail track and a road. Works with another station on the line, or a line to a neighbour.",
+      "category": "Transport",
+      "conducts": true,
+      "era": "City",
+      "id": "TrainStation",
+      "name": "Train station",
+      "service": "Rail",
+      "size": 2,
+      "stats": {
+        "cost": 600000,
+        "demand_bonus": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "jobs": 30,
+        "land_value_bonus": 0,
+        "land_value_radius": 0,
+        "pollution": 0,
+        "power_draw": 6,
+        "power_supply": 0,
+        "river_bonus": 0,
+        "service_radius": 6,
+        "upkeep": 150,
+        "water_supply": 0
+      }
+    },
+    {
       "blurb": "Cheap, plentiful power. Very dirty.",
       "category": "Power",
       "conducts": true,
@@ -777,6 +806,8 @@
     "power_line_cost": 500,
     "power_line_upkeep": 1,
     "powered_bonus": 60,
+    "rail_cost": 4000,
+    "rail_upkeep": 2,
     "reelection_percent": 50,
     "region_demand_percent": 25,
     "region_growth_percent_per_year": 30,
@@ -790,6 +821,7 @@
     "road_access_radius": 2,
     "service_bonus": 30,
     "starting_treasury": 2000000,
+    "station_riders": 1500,
     "street_capacity": 150,
     "street_cost": 1000,
     "street_travel_cost": 4,
@@ -800,6 +832,8 @@
     "traffic_at_capacity": 40,
     "traffic_pollution_divisor": 3,
     "traffic_weight": 1,
+    "train_fare": 30,
+    "train_share_percent": 50,
     "water_free_levels": 1,
     "water_pipe_cost": 500,
     "water_pipe_upkeep": 1,

@@ -159,7 +159,7 @@
       <section class="pedia-sec" id="regions" style="padding:0">
         <h2>Regions</h2>
         <ul>
-          <li>A link exists on an edge when any tile on that edge has a road (road link), a power line (power) or a water pipe (water), and there's a city beyond it.</li>
+          <li>A link exists on an edge when any tile on that edge has a road (road link), rail track (rail link: commuters by train, and demand as for a road), a power line (power) or a water pipe (water), and there's a city beyond it.</li>
           <li>Road link: the neighbour's open jobs (workers its jobs could still take) wait at your edge roads for commuters, and <span data-k="commute_percent">50</span>% of its job seekers drive in to your open jobs. Raw demand rises by <span data-k="region_demand_percent">25</span>% of its open jobs (homes), of its population ÷ <span data-k="residents_per_100_commercial_jobs">300</span> × 100 (shops) and of its job seekers (factories). Its open jobs also count against your jobless rate.</li>
           <li>Power or water link: a network touching the edge buys up to the neighbour's spare when it's short, at <span data-k="import_price">150</span>¢ per 100 units per tick, and sells its spare to a short neighbour at <span data-k="export_price">80</span>¢.</li>
           <li>Neighbours are snapshots taken when each city was last saved, sent to the city by a command when you open it, so replays reproduce them.</li>
@@ -173,6 +173,7 @@
           <li>Commuters join the road within <span data-k="road_access_radius">2</span> tiles of home that gets them to work cheapest. Crossing a street costs <span data-k="street_travel_cost">4</span>, an avenue <span data-k="avenue_travel_cost">3</span>; ties break on map position, so the result is the same on every machine.</li>
           <li>Nearer homes claim jobs first. When every nearby job is taken, the rest search again farther out, up to 16 rounds. A home with no road route to any job counts as out of work.</li>
           <li>A road's traffic is the trips crossing it × <span data-k="traffic_at_capacity">40</span> ÷ its capacity (street <span data-k="street_capacity">150</span>, avenue <span data-k="avenue_capacity">360</span>). The commute time shown is route cost ÷ <span data-k="street_travel_cost">4</span> + 2 minutes.</li>
+          <li><b>Trains</b> run first. A station must touch rail track and a road and covers 6 tiles; it works when powered and its line has a second station or crosses a map edge to a neighbour. A home near a working station sends <span data-k="train_share_percent">50</span>% of its trips by train to open jobs near another station on the same line, then to the neighbour down the line, up to <span data-k="station_riders">1500</span> riders per station. A train commute counts as 12 minutes. Riders pay <span data-money="train_fare"></span> a month.</li>
           <li><b>Buses.</b> A bus stop must touch a road and covers 4 tiles. It works when a powered bus depot touches the same road network. When both the home and the job's road are covered, <span data-k="bus_share_percent">40</span>% of those trips go by bus, up to <span data-k="bus_depot_riders">600</span> riders per depot. Riders pay <span data-money="bus_fare"></span> a month each.</li>
         </ul>
       </section>
