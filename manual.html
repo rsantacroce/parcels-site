@@ -62,8 +62,8 @@
       <h2 id="screen">The screen</h2>
       <ul>
         <li><strong>Left rail</strong>: Inspect, Zoning, Roads, Power, Water, Services, Parks, Landmarks, Demolish and Data views. Clicking a category opens a list of everything in it, with icons and prices.</li>
-        <li><strong>Right rail</strong>: the City card (approval and what residents think), the Budget card (money, tax rate, power and water), the isometric/3D camera switch, street view, sound, help and the game menu.</li>
-        <li><strong>Dashboard</strong> along the bottom: minimap (click or drag to move the camera), city name and date, speed buttons, the approval meter, treasury with net income per month, population, mood, jobless rate, power and water status, the top issue and the RCIO demand chart.</li>
+        <li><strong>Right rail</strong>: the Inbox (letters from residents, with a red count of open ones), the City card (approval and what residents think), the Budget card (money, tax rate, power and water), the Mayor card (your term, the next election, goodwill and past results), the isometric/3D camera switch, street view, sound, help and the game menu.</li>
+        <li><strong>Dashboard</strong> along the bottom: minimap (click or drag to move the camera), city name and date, speed buttons, the approval meter, treasury with net income per month, population, the next election (green if you'd win today, red if not), jobless rate, power and water status, the top issue and the RCIO demand chart.</li>
         <li>Hover a building with Inspect to see what it is and how it's doing; click it to open the inspector.</li>
       </ul>
 
@@ -196,6 +196,18 @@
         <tr><td>City finances</td><td>The treasury isn't in debt</td></tr>
       </table></div>
       <p>Their sum sets the <strong>mayor's approval</strong> (0–100%), which moves gradually so one bad month doesn't swing it. The City card shows each factor as a bar, a mood word (Thriving, Happy, Content, Uneasy, Unhappy, Angry) and the <strong>top issue</strong>: the factor dragging approval down most, in your residents' words.</p>
+
+      <h2 id="mayor">Being mayor</h2>
+      <p><strong>Letters.</strong> Now and then a resident writes in, usually about the city's top issue. Each letter asks for one concrete thing and gives you twelve months:</p>
+      <ul>
+        <li>a school, clinic, police station or fire station covering their home;</li>
+        <li>a park, plaza, playground or sports field within 4 tiles of their home;</li>
+        <li>taxes back down to 7%, no homes without power or water, fewer people out of work, or the city out of debt;</li>
+        <li>cleaner air or quieter streets at their home.</li>
+      </ul>
+      <p>The Inbox lists open letters with how long is left; <strong>Show</strong> moves the camera to the writer's home. A letter is granted the moment its goal is met, which earns goodwill worth about 6% approval. One that runs out, or whose writer's home you bulldoze, costs about 4%. Goodwill fades over the following months. At most three letters are open at once.</p>
+      <p><strong>Elections</strong> come every four years. You need 50% approval on polling day to win. If you lose, you can stay on as caretaker and keep building, or go back to the title screen. The Mayor card marks the 50% line on your approval meter and lists past results.</p>
+      <p><strong>Approval matters for growth.</strong> Above 50% it adds to residential demand and below 50% it takes away, so an unpopular mayor sees homes empty out.</p>
 
       <h2 id="overlays">Data views</h2>
       <p>Number keys <kbd>1</kbd>–<kbd>9</kbd> (or <em>Data views</em> on the left rail) tint the map: city, land value, power, water, density, pollution, traffic, crime and services. Buildings fade to grey so the ground colours read clearly. The water view also shows pipes.</p>

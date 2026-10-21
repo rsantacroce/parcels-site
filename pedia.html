@@ -58,6 +58,7 @@
       <a href="#upkeep">Upkeep</a>
       <a href="#utilities">Power and water</a>
       <a href="#approval">Approval</a>
+      <a href="#mayor">Letters and elections</a>
       <a href="#demand">Demand</a>
       <a href="#growth">Growth</a>
       <a href="#landvalue">Land value</a>
@@ -80,7 +81,7 @@
 
       <section class="pedia-sec" id="tick" style="padding:0">
         <h2>A game tick</h2>
-        <p>Every tick runs seven stages in order, so a replay always reproduces the same city:</p>
+        <p>Every tick runs eight stages in order, so a replay always reproduces the same city:</p>
         <ol>
           <li><b>Commands</b>: everything you asked for is applied, in order.</li>
           <li><b>Utilities</b>: power and water networks are flood-filled and each network serves its tiles from its own supply. Power is settled before water, because pumps need power.</li>
@@ -88,7 +89,8 @@
           <li><b>Growth</b>: every eligible zone tile competes for one shared pool of newcomers.</li>
           <li><b>Land value</b>: service coverage, traffic, pollution and crime are recomputed and land value moves toward its target.</li>
           <li><b>Economy</b>: taxes in, upkeep out, treasury clamped at the debt floor.</li>
-          <li><b>Status</b>: residents score nine parts of city life and approval drifts toward the total.</li>
+          <li><b>Status</b>: residents score nine parts of city life and approval drifts toward the total plus goodwill.</li>
+          <li><b>Mayor</b>: open letters are granted or lapse; once a month goodwill fades, a resident may write in, and on election day the city votes.</li>
         </ol>
         <p>There is no time limit: the city runs as long as you like.</p>
       </section>
@@ -138,6 +140,18 @@
         </ul>
       </section>
 
+      <section class="pedia-sec" id="mayor" style="padding:0">
+        <h2>Letters and elections</h2>
+        <ul>
+          <li>Each month there's a <span data-k="letter_chance_per_mille">500</span>‰ chance a resident writes in, once the city has <span data-k="letters_min_population">60</span> people, with at most <span data-k="max_open_letters">3</span> letters open and never two asking for the same thing.</li>
+          <li>70% of letters are about the top issue; the rest pick a factor at random. A letter is only sent if there's something concrete to ask for that isn't already done.</li>
+          <li>A letter lasts <span data-k="letter_months">12</span> months. Granted: goodwill +<span data-k="letter_reward">60</span> (tenths of a percent of approval). Lapsed, or the writer's home is gone: −<span data-k="letter_penalty">40</span>. Goodwill is capped at ±<span data-k="goodwill_cap">200</span> and fades by <span data-k="goodwill_fade_percent">8</span>% a month.</li>
+          <li>Elections every <span data-k="election_interval_months">48</span> months; you win with <span data-k="reelection_percent">50</span>% approval or more.</li>
+        </ul>
+        <div class="formula">residential demand (‰) += (approval − 50%, in tenths of a percent) × <span data-k="approval_demand_weight">40</span> ÷ 100</div>
+        <p>So at 80% approval residential demand gets +120‰, and at 20% it loses 120‰.</p>
+      </section>
+
       <section class="pedia-sec" id="approval" style="padding:0">
         <h2>Approval</h2>
         <p>Residents score nine factors from what the homes around the city experience, averaged over everyone who lives there:</p>
@@ -153,7 +167,7 @@
           <tr><td>Neighbourhoods</td><td>(average land value − <span data-k="land_value_base">200</span>) ÷ 20</td><td class="num">−10…10</td></tr>
           <tr><td>City finances</td><td>−10 while the treasury is below zero</td><td class="num">−10…0</td></tr>
         </table></div>
-        <div class="formula">target approval = 50% + sum of all factors (as %), clamped to 0…100%<br>each tick approval closes 1/40 of the gap to the target (at least 0.1%)</div>
+        <div class="formula">target approval = 50% + sum of all factors (as %) + goodwill, clamped to 0…100%<br>each tick approval closes 1/40 of the gap to the target (at least 0.1%)</div>
         <p>The <b>top issue</b> is the factor with the lowest negative score. Mood words: 80%+ Thriving, 65% Happy, 50% Content, 35% Uneasy, 20% Unhappy, below that Angry.</p>
         <p>Your treasury starts at <b><span data-money="starting_treasury"></span></b>. Spending needs cash in hand. Upkeep can push you below zero, but never below <b><span data-money="debt_floor"></span></b>.</p>
       </section>
