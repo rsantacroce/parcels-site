@@ -58,6 +58,7 @@
       <a href="#upkeep">Upkeep</a>
       <a href="#utilities">Power and water</a>
       <a href="#approval">Approval</a>
+      <a href="#commute">Commuting and buses</a>
       <a href="#mayor">Letters and elections</a>
       <a href="#demand">Demand</a>
       <a href="#growth">Growth</a>
@@ -81,14 +82,15 @@
 
       <section class="pedia-sec" id="tick" style="padding:0">
         <h2>A game tick</h2>
-        <p>Every tick runs eight stages in order, so a replay always reproduces the same city:</p>
+        <p>Every tick runs nine stages in order, so a replay always reproduces the same city:</p>
         <ol>
           <li><b>Commands</b>: everything you asked for is applied, in order.</li>
           <li><b>Utilities</b>: power and water networks are flood-filled and each network serves its tiles from its own supply. Power is settled before water, because pumps need power.</li>
           <li><b>Demand</b>: residential, commercial, industrial and office demand, shifted by your tax rate.</li>
           <li><b>Growth</b>: every eligible zone tile competes for one shared pool of newcomers.</li>
-          <li><b>Land value</b>: service coverage, traffic, pollution and crime are recomputed and land value moves toward its target.</li>
-          <li><b>Economy</b>: taxes in, upkeep out, treasury clamped at the debt floor.</li>
+          <li><b>Land value</b>: service coverage, pollution and crime are recomputed and land value moves toward its target.</li>
+          <li><b>Commute</b> (every <span data-k="commute_interval">5</span> ticks): residents route along the roads to jobs, which sets each road's traffic, bus ridership and fares.</li>
+          <li><b>Economy</b>: taxes and bus fares in, upkeep out, treasury clamped at the debt floor.</li>
           <li><b>Status</b>: residents score nine parts of city life and approval drifts toward the total plus goodwill.</li>
           <li><b>Mayor</b>: open letters are granted or lapse; once a month goodwill fades, a resident may write in, and on election day the city votes.</li>
         </ol>
@@ -137,6 +139,17 @@
           <li><b>Power use</b>: a zone tile needs 1 + its level; a building needs its listed power draw.</li>
           <li><b>Water use</b>: a zone tile needs its level (empty lots need none). Levels above <span data-k="water_free_levels">1</span> won't grow without water.</li>
           <li>Water producers make nothing without power. Pumps and treatment plants that touch the river get their river bonus. Pipes can follow a bridge across water.</li>
+        </ul>
+      </section>
+
+      <section class="pedia-sec" id="commute" style="padding:0">
+        <h2>Commuting and buses</h2>
+        <ul>
+          <li><span data-k="commute_percent">50</span>% of residents travel to work. Each job takes <span data-k="workers_per_100_jobs">130</span>/100 workers, and its workers arrive at the road nearest the job.</li>
+          <li>Commuters join the road within <span data-k="road_access_radius">2</span> tiles of home that gets them to work cheapest. Crossing a street costs <span data-k="street_travel_cost">4</span>, an avenue <span data-k="avenue_travel_cost">3</span>; ties break on map position, so the result is the same on every machine.</li>
+          <li>Nearer homes claim jobs first. When every nearby job is taken, the rest search again farther out, up to 16 rounds. A home with no road route to any job counts as out of work.</li>
+          <li>A road's traffic is the trips crossing it × <span data-k="traffic_at_capacity">40</span> ÷ its capacity (street <span data-k="street_capacity">150</span>, avenue <span data-k="avenue_capacity">360</span>). The commute time shown is route cost ÷ <span data-k="street_travel_cost">4</span> + 2 minutes.</li>
+          <li><b>Buses.</b> A bus stop must touch a road and covers 4 tiles. It works when a powered bus depot touches the same road network. When both the home and the job's road are covered, <span data-k="bus_share_percent">40</span>% of those trips go by bus, up to <span data-k="bus_depot_riders">600</span> riders per depot. Riders pay <span data-money="bus_fare"></span> a month each.</li>
         </ul>
       </section>
 
@@ -374,7 +387,7 @@
     const ft = $("fx-table");
     for (const r of [
       ["Pollution", `industrial tiles ${c.industrial_pollution_per_level}/level (×1.5 dense); plants as listed; roads: traffic ÷ ${c.traffic_pollution_divisor}`, `${c.pollution_radius} tiles, fading`, c.pollution_cap],
-      ["Traffic", `on each road tile: occupants within ${c.traffic_radius} tiles ÷ ${c.traffic_divisor}; avenues carry ${c.avenue_traffic_percent}%`, "lowers land value next to the road", "—"],
+      ["Traffic", `on each road tile: commute trips passing over it × ${c.traffic_at_capacity} ÷ capacity (street ${c.street_capacity}, avenue ${c.avenue_capacity}); see <a href="#commute">Commuting</a>`, "lowers land value next to the road", "—"],
       ["Crime", `occupants within ${c.crime_radius} tiles ÷ ${c.crime_divisor}; police coverage removes ${c.police_crime_reduction_percent}%`, `${c.crime_radius} tiles`, c.crime_cap],
       ["Fire", `each zone tile at level 2+ without fire coverage: ${c.fire_chance_per_million} in a million per tick (about ${(c.fire_chance_per_million * TPM * 12 / 1e4).toFixed(2)}% a year)`, `burns to rubble for ${c.fire_rubble_ticks} ticks, then regrows`, "—"],
     ]) ft.append(el("tr", {}, ...r.map(x => el("td", {}, String(x)))));
@@ -382,7 +395,7 @@
     // Networks.
     const nets = [
       ["Street", "street", `Two lanes. ${money(c.street_cost)} per tile, ${perMonth(c.street_upkeep)}/mo upkeep. Bridges over water: ${money(c.street_cost * c.bridge_cost_multiplier)} per tile, double upkeep.`],
-      ["Avenue", "avenue", `Planted median; carries traffic at ${c.avenue_traffic_percent}% of a street's congestion. ${money(c.avenue_cost)} per tile, ${perMonth(c.avenue_upkeep)}/mo upkeep. Bridges: ${money(c.avenue_cost * c.bridge_cost_multiplier)} per tile.`],
+      ["Avenue", "avenue", `Planted median; quicker to drive (cost ${c.avenue_travel_cost} vs ${c.street_travel_cost} per tile) and carries ${c.avenue_capacity} trips before it's full, against a street's ${c.street_capacity}. ${money(c.avenue_cost)} per tile, ${perMonth(c.avenue_upkeep)}/mo upkeep. Bridges: ${money(c.avenue_cost * c.bridge_cost_multiplier)} per tile.`],
       ["Power line", "power line wire", `${money(c.power_line_cost)} per tile, ${perMonth(c.power_line_upkeep)}/mo. Zones and most buildings also conduct, so you only need lines to bridge gaps. Lines over water become pylons.`],
       ["Water pipe", "pipe", `${money(c.water_pipe_cost)} per tile, ${perMonth(c.water_pipe_upkeep)}/mo. Underground; shown in the water overlay. Zones and buildings pass water on.`],
       ["Bulldoze", "demolish", `${money(c.bulldoze_cost)} per tile, plus ${money(c.clear_forest_cost)} to clear woodland.`],

@@ -108,8 +108,13 @@
       <div class="table-scroll"><table>
         <tr><th>Item</th><th class="num">Cost per tile</th><th>Notes</th></tr>
         <tr><td>Street</td><td class="num">$10</td><td>Two lanes.</td></tr>
-        <tr><td>Avenue</td><td class="num">$25</td><td>Planted median, half the congestion of a street.</td></tr>
+        <tr><td>Avenue</td><td class="num">$25</td><td>Planted median. Quicker, and carries more than twice the traffic of a street, so commuters seek it out.</td></tr>
+        <tr><td>Bus stop</td><td class="num">$150</td><td>Beside a road. Covers 4 tiles around it once a depot runs its road network.</td></tr>
+        <tr><td>Bus depot</td><td class="num">$4,000</td><td>2×2, beside a road, needs power. Runs buses on the road network it touches, up to 600 riders.</td></tr>
       </table></div>
+      <h3>Traffic and commuting</h3>
+      <p>Traffic isn't decoration: every few seconds the city works out how each resident gets to work. People take the quickest route along the roads to the nearest job that still has room, and a road's traffic is the number of trips crossing it. Jammed roads lower land value, add pollution and annoy residents. To fix a jam, upgrade the busiest streets to avenues, give people a second route, put jobs closer to homes, or run buses. Homes whose roads don't connect to any job count as out of work.</p>
+      <p>When a home and its workplace are both near a working bus stop, 40% of those commuters take the bus instead of driving. The City card's <em>Getting around</em> section shows the average commute, how many ride the bus and anyone with no road to work. Bus fares show in the Budget card.</p>
 
       <h2 id="zones">Zones and growth</h2>
       <p>You don't build houses, shops or factories yourself. You zone land, and buildings move in when there is demand. The RCIO chart in the dashboard shows demand for <span class="chip" style="background:var(--res)"></span>residential, <span class="chip" style="background:var(--com)"></span>commercial, <span class="chip" style="background:var(--ind)"></span>industrial and <span class="chip" style="background:var(--off)"></span>office.</p>
@@ -210,7 +215,7 @@
       <p><strong>Approval matters for growth.</strong> Above 50% it adds to residential demand and below 50% it takes away, so an unpopular mayor sees homes empty out.</p>
 
       <h2 id="overlays">Data views</h2>
-      <p>Number keys <kbd>1</kbd>–<kbd>9</kbd> (or <em>Data views</em> on the left rail) tint the map: city, land value, power, water, density, pollution, traffic, crime and services. Buildings fade to grey so the ground colours read clearly. The water view also shows pipes.</p>
+      <p>Number keys <kbd>1</kbd>–<kbd>9</kbd> and <kbd>0</kbd> (or <em>Data views</em> on the left rail) tint the map: city, land value, power, water, density, pollution, traffic, crime, services and buses. The traffic view colours each road from blue (quiet) through orange (at capacity) to red (jammed); the buses view shows stops and the area they reach. Buildings fade to grey so the ground colours read clearly. The water view also shows pipes.</p>
 
       <h2 id="saves">Saves and settings</h2>
       <p>Saves live in <code>saves/</code> next to the game: named saves from the menu, <code>quicksave.ron</code> (<kbd>F5</kbd>/<kbd>F9</kbd>) and an autosave whose interval you set in Settings. A save keeps the balance rules it was started with, so tweaking <code>config/balance.ron</code> only affects new games. Saves from v0.2 (the multiplayer edition) can't be loaded in v0.3.</p>
